@@ -1,0 +1,639 @@
+{% extends "coordination/Page.html" %}
+{% load otree %}
+{% load staticfiles %}
+
+{% block styles %}
+
+    <style>
+    li {
+    font-size: 19px;
+    margin: 0px 100px 10px 53px;
+        }
+
+    input[type=text]:focus {
+        border: 2px solid black;
+        outline: 0;
+    }
+
+    </style>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+var starttime=new Date();
+record_time('start_1');
+
+$(function(){
+    delay(2000);
+    delay(1000);
+});
+
+//Next-button controls
+function bootstrapTabControl(){
+  var i, items = $('.nav-link'), pane = $('.tab-pane'), bar = $('#myTab');
+    $('.nexttab').on('click', function(){
+      bar.removeClass('delay_1000');
+
+      for(i = 0; i < items.length; i++){
+          if($(items[i]).hasClass('active') == true){
+              break;
+          }
+      }
+      if(i < items.length - 1){
+          // for tab
+          if ($(items[i]).hasClass('nav-current') == true){
+            $(items[i]).removeClass('nav-current');
+            $(items[i+1]).addClass('nav-current');
+          }
+          $(items[i]).removeClass('active');
+          $(items[i+1]).removeClass('disabled');
+          $(items[i+1]).addClass('active');
+          $(items[i+1]).attr('onclick', 'update_panels('+ (i+2).toString()+'); topFunction();');
+
+          // for pane
+          $(pane[i]).removeClass('show active');
+          $(pane[i+1]).addClass('show active');
+      }
+    });
+}
+bootstrapTabControl();
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+//Live-send to record time on page and time taken for quizzes
+function record_time(type) {
+    var time = Date.now();
+    liveSend({'type': type, 'time': time});
+}
+
+
+    function check_results_0(event) {
+        var input11 = document.getElementById("q01_yes");
+        var input12 = document.getElementById("q01_no");
+        var input21 = document.getElementById("q02_yes");
+        var input22 = document.getElementById("q02_no");
+        var input31 = document.getElementById("q03_yes");
+        var input32 = document.getElementById("q03_no");
+        var input4 = document.getElementById("text_1");
+        var next = document.getElementById("button_next_6");
+
+        if(!(input12.checked == true && input21.checked == true && input32.checked == true && input4.value == '{{ real_equivalent|floatformat:0 }}')){
+            event.stopImmediatePropagation();
+            next.blur();
+            alert('One or more answers are missing or incorrect, please review.'); 
+        } else {
+            alert('Success! You answered all questions correctly.');
+            input11.setAttribute("disabled", "");
+            input12.setAttribute("disabled", "");
+            input21.setAttribute("disabled", "");
+            input22.setAttribute("disabled", "");
+            input31.setAttribute("disabled", "");
+            input32.setAttribute("disabled", "");
+            input4.setAttribute("disabled", "");            
+            next.onclick = 'topFunction(); delay(2000);';
+            next.innerHTML = '<strong style="font-size: 24px; vertical-align:middle">Proceed.</strong>';
+            delay(2000);
+            record_time('quiz_0');
+        }
+
+    }
+
+    var button_B_0 = document.getElementById("button_B_0");
+    var button_A_0 = document.getElementById("button_A_0");
+
+    button_B_0.onclick = function() {
+            button_B_0.classList.add("button-B-selected");
+            button_B_0.classList.remove("button-B");
+            button_A_0.classList.remove("button-A-selected");
+            button_A_0.classList.add("button-A");
+    }
+
+    button_A_0.onclick = function() {
+            button_B_0.classList.remove("button-B-selected");
+            button_B_0.classList.add("button-B");
+            button_A_0.classList.add("button-A-selected");
+            button_A_0.classList.remove("button-A");
+    }
+
+    var button_B_1 = document.getElementById("button_B_1");
+    var button_A_1 = document.getElementById("button_A_1");
+
+    function check_results_1(event) {
+        var input1 = document.getElementById("text_11");
+        var input2 = document.getElementById("text_12");
+        var next = document.getElementById("button_next_8");
+        var input31 = document.getElementById("q13_yes");
+        var input32 = document.getElementById("q13_no");
+
+        if(!(input1.value == "{{payoff_quiz_1|cut:" points"}}" && input2.value == "{{payoff_quiz_2|cut:" points"}}" && button_B_1.classList.contains("button-B-selected") == true && input31.checked == true)){
+            event.stopImmediatePropagation();
+            next.blur();
+            alert('One or more answers are missing or incorrect, please review.'); 
+        } else {
+            alert('Success! You answered all questions correctly.');
+            input1.setAttribute("disabled", "");
+            input2.setAttribute("disabled", "");
+            input31.setAttribute("disabled", "");
+            input32.setAttribute("disabled", "");
+            button_B_1.setAttribute("disabled", "");
+            button_A_1.setAttribute("disabled", "");
+            button_A_1.classList.add("disabled-A");
+            button_A_1.classList.remove("button-A");
+            next.onclick = 'topFunction(); delay(2000);';
+            next.innerHTML = '<strong style="font-size: 24px; vertical-align:middle">Proceed.</strong>';
+            delay(2000);
+            record_time('quiz_1');
+        }
+
+    }
+
+
+    button_B_1.onclick = function() {
+            button_B_1.classList.add("button-B-selected");
+            button_B_1.classList.remove("button-B");
+            button_A_1.classList.remove("button-A-selected");
+            button_A_1.classList.add("button-A");
+    }
+
+    button_A_1.onclick = function() {
+            button_B_1.classList.remove("button-B-selected");
+            button_B_1.classList.add("button-B");
+            button_A_1.classList.add("button-A-selected");
+            button_A_1.classList.remove("button-A");
+    }
+
+    function verify(event) {
+        var r = confirm("You are now exiting the introduction. Confirm to start Part 1.");
+        if (r == false) {
+            event.preventDefault();
+            document.getElementById("button_next_9").blur();
+        } else {
+            var endtime=new Date();
+            record_time('end_1');
+        }
+    }
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<ul class="nav nav-pills  fixed-top navbar-light bg-light justify-content-center delay_1000" id="myTab" role="tablist">
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_1 nav-link active nav-current" data-toggle="tab" href="#part1" role="tab" aria-controls="part1">
+                Welcome
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_2 nav-link disabled" data-toggle="tab" href="#part2" role="tab" aria-controls="part2">
+                Introduction #1
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_3 nav-link disabled" data-toggle="tab" href="#part3" role="tab" aria-controls="part3">
+                #2
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 18px 10px 7px 10px;"><span style="font-size: 32px; vertical-align: middle; margin:0; padding: 0;">Part 1</span></li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_4 nav-link disabled" data-toggle="tab" href="#part4" role="tab" aria-controls="part4">
+                Instructions #1
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_4 nav-link disabled" data-toggle="tab" href="#part5" role="tab" aria-controls="part5">
+                #2
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_6 nav-link disabled" data-toggle="tab" href="#part6" role="tab" aria-controls="part6">
+                #3
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_7 nav-link disabled" data-toggle="tab" href="#part7" role="tab" aria-controls="part7">
+                Practice Task #1
+        </a>
+    </li>
+
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_8 nav-link disabled" data-toggle="tab" href="#part8" role="tab" aria-controls="part8">
+                #2
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_9 nav-link disabled" data-toggle="tab" href="#part9" role="tab" aria-controls="part9">
+                Start
+        </a>
+    </li>
+</ul>
+
+
+
+<!-- Tab content -->
+<div class="tab-content" id="myTabContent">
+    <div class="delay_1000 tab-pane show active" id="part1" role="tabpanel" aria-labelledby="part1-tab">
+        <p style="padding: 20px 0px 0px 20px; font-variant: small-caps; text-align: center; font-size: 24px"><strong>Welcome and thank you for participating in this experiment!</strong></p>
+        <div style="padding: 0px 130px 0px 190px;">
+            <ul>
+                <li>Please put your cellphone on silent, and stow it in your pocket, purse, or backpack.</li>
+                <li>
+                    Please pull out the dividers to the left and right fo your workstation.
+                </li>
+                <li>Please read these and all of the following instructions carefully.</li>
+                <li>Please do not speak to other participants.</li>
+                <li>If you have a question at any point of this experiment, raise your hand. One of the experimenters will come to your station.</li>
+                <li>All data collection in this experiment is fully anonymized.</li>
+            </ul>
+        </div>
+                    <div class="delay_2000" style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                            <button id="button_next_1" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                                <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                            </button>
+                    </div>
+    </div>
+    <div class="tab-pane" id="part2" role="tabpanel" aria-labelledby="part2-tab">
+    <div style="padding: 30px 130px 0px 190px;">
+        <ul>
+            <li>
+                The experiment consists of two parts, followed by a short survey. 
+                The overall duration is about {{duration}} minutes.
+            </li>
+            <li>You are guaranteed ${{participation_fee|floatformat:0}} for participating. 
+                On top of that, you are paid for your decisions in both parts of the experiment.
+            </li>
+            <li>
+                Both parts of the experiment contain a number of decision-making tasks. 
+                On each task, you may earn  <i>points</i> that are converted into money at the end of session. 
+                Throughout, {{ real_equivalent|floatformat:0 }} points equal $1.
+            </li>
+            <li>
+                All payments are made electronically within 24 hours of the end of this session.
+            </li>
+        </ul>
+    </div>
+                <div style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                        <button id="button_next_2" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                        </button>
+                </div>
+    </div>
+    <div class="tab-pane" id="part3" role="tabpanel" aria-labelledby="part3-tab">
+    <div style="padding: 30px 130px 0px 190px;">
+        <ul>
+            <li>
+                For all tasks in this experiment, your payoff will depend partly on your own choices, partly on other participants' choices, and partly on chance.
+            </li>
+            <li>
+                At several points in this experiment, you are randomly matched with other participants.
+            </li>
+            <li>   
+                Throughout, the matching is completely anonymous. You will not learn the identity of your partners, and they will not learn your identity.
+            </li>
+            <li>Also, you will never be matched with the same participant twice.</li>
+        </ul>
+    </div>
+                <div style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                        <button id="button_next_3" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                        </button>
+                </div>
+    </div>
+    <div class="tab-pane" id="part4" role="tabpanel" aria-labelledby="part4-tab">
+    <div style="padding: 30px 130px 0px 190px;">
+        <ul>
+            <li>
+                In Part 1, you complete a sequence of {{ num_games }} decision-making tasks.
+            </li>
+            <li>
+                You will not get any feedback about the results of Part 1 until the very end of session.
+            </li>
+            <li>
+                Specifically, you will not see any decisions made by the other participants or otherwise learn about them while you are making your decisions.
+            </li>
+            <li>Also, your decisions in this part have no infuence on the outcomes of Part 2.</li>
+            <li>
+                The same is true for all other participants.
+            </li>
+        </ul>
+    </div>
+                <div style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                        <button id="button_next_4" onclick="topFunction(); delay(2000);" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                        </button>
+                </div>
+    </div>
+
+    <div class="tab-pane" id="part5" role="tabpanel" aria-labelledby="part5-tab">
+    <div style="padding: 30px 130px 0px 190px;">
+        <ul>
+            <li>
+                Throughout Part 1, you can revise your inputs as you go through the {{num_games}} tasks.
+            </li>
+            <li>
+                A navigation bar will allow you to return to earlier tasks and change your inputs there.
+            </li>
+            <li>
+                Once you have completed all tasks and proceed to Part 2, your inputs for Part 1 will be final.
+            </li>
+            <li>
+                You will have {{tlimit}} minutes to make your decisions in Part 1.
+            </li>
+            <li>
+                One out of the {{num_games}} tasks in Part 1 will end up counting towards your payment.
+                Which task counts for payment in Part 1 will be randomly determined at the end of session.
+            </li>
+            <li>
+                For the selected task, you will then get a full results briefing.
+            </li>
+        </ul>
+    </div>
+                <div style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                        <button id="button_next_5" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                        </button>
+                </div>
+    </div>
+
+    <div class="tab-pane" id="part6" role="tabpanel" aria-labelledby="part6-tab">
+    <div style="padding: 20px 134px 0px 190px;">
+        <p style="text-align: left; font-size: 19px; padding: 0px 0px 0px 60px"><strong>Please answer the following understanding questions.</strong></p>
+        <ol>
+            <li>Will you receive any feedback about Part 1 before the end of session?
+            <div style="padding: 10px 0px 0px 0px;">
+            <input type="radio" id="q01_yes" name="q01" value="Yes">
+            <label for="q01_yes">Yes</label>&nbsp;&nbsp;
+            <input type="radio" id="q01_no" name="q01" value="No">
+            <label for="q01_no">No</label>
+            </div>
+            </li>
+            <li>While working on Part 1, can you revise your inputs on previous tasks in Part 1?
+            <div style="padding: 10px 0px 0px 0px;">
+                <input type="radio" id="q02_yes" name="q02" value="Yes">
+                <label for="q02_yes">Yes</label>&nbsp;&nbsp;
+                <input type="radio" id="q02_no" name="q02" value="No">
+                <label for="q02_no">No</label>
+            </div>
+            </li>
+            <li>Can your decisions in Part 1 influence the outcomes in Part 2 in any way?
+                <div style="padding: 10px 0px 0px 0px;">
+                <input type="radio" id="q03_yes" name="q03" value="Yes">
+                <label for="q03_yes">Yes</label>&nbsp;&nbsp;
+                <input type="radio" id="q03_no" name="q03" value="No">
+                <label for="q03_no">No</label>
+                </div>
+            </li>
+            <li>How many experimental points make $1?<br>
+                <div style="padding: 10px 0px 0px 0px;">
+                <input type="text" id="text_1" name="text_1" style="margin: 5px 0px 0px 0px; width:9%; text-align:center; font-weight: bold;">&nbsp;points&nbsp;
+                </div>
+            </li>
+        </ol>
+    </div>
+                <div style="text-align: center; width: 100%; margin: 40px 0px 0px 0px;">
+                        <button id="button_next_6" onclick="topFunction(); check_results_0(event);" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Check Your Answers.</strong>
+                        </button>
+                </div>
+
+    </div>
+
+    <div class="tab-pane" id="part7" role="tabpanel" aria-labelledby="part7-tab">
+    <div style="padding: 40px 0px 0px 0px;" >
+        <table style="width: 110%; margin: 0; padding: 0;">
+            <col width="40%">
+            <col width="0%">
+            <col width="60%">
+            <tr>
+            <td>
+            <table style="width: 100%; margin: -190px 0px 0px -39px;">
+                <tr>
+                    <th colspan="4" rowspan="4" class="hollow" style="transform: rotate(-27.5deg); padding: 80px 0px 0px 0px;"></th>
+                    <th colspan="9" style="font-size: 32px;"><center>Partner</center></th>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 0px 0px 0px 0px">
+                        <div style="padding: 0px 0px 0px 5px; margin: 0;"><input id="id_slider_0" class="slider slider-disabled" style="transform: rotate(180deg); opacity:0.0;" type="range" min="0" max="100" step="1" disabled></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_0"></span></strong></th>
+                    <td colspan="1"></td>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_0_res"></span></strong></th>
+                </tr>
+                <tr>
+                    <!-- Choice lables for col are reversed here if equilibria are off diagonal-->
+                    <th colspan="4"><center><button class="button disabled-{{other_A}}" disabled><strong> &nbsp;{{other_A}}&nbsp; </strong></button></center></th>
+                    <td></td>
+                    <th colspan="4"><center><button class="button disabled-{{other_B}}" disabled><strong> &nbsp;{{other_B}}&nbsp; </strong></button></center></th>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <th rowspan="2" style="transform: rotate(-90deg); font-size: 32px;">You</th>
+                    <td><button id="button_A_0" type="button" class="button button-A"><strong> &nbsp;A&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{a1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{a2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ b1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ c2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <td><button id="button_B_0" type="button" class="button button-B"><strong> &nbsp;B&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ c1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ b2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{d1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{d2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            </td>
+            <td></td>
+            <td><table style="width: 100%; margin: 0">
+                <tr><td>
+                    <div style="width: 120%; margin: -80px 0px 0px -60px; padding: 40px 33px 50px 0px;">
+                        <ul>
+                            <li>
+                                Each task in Part 1 is depicted by a table like this one.
+                            </li>
+                            <li>
+                                Use the buttons on the left to select a table row, A or B.
+                            </li>
+                            <li>
+                                Your partner selects a table column, A or B.
+                            </li>
+                            <li>
+                                The cell at which the selected row and column intersect determines your payoffs.
+                            </li>
+                            <li>    
+                                In each cell, the <font color="cc2200">left number</font> is your payoff for that row and column. The <font color="000000" style="opacity: 0.7;">right number </font> is your partner's payoff.
+                            </li>
+                            <li>
+                                Like in this example, all tables used for Part 1 are symmetric. So all the other participants work through the same tasks as you.
+                            </li>
+                            <li>
+                                For the Part-1 task that is selected for payment at the end of session, we match your choice with the choice of a randomly selected partner (for the table column) to determine payoffs.
+                            </li>
+                        </ul>
+                    </div>
+                </td></tr>
+            </table></td>
+            </tr>
+        </table>
+    </div>
+                <div style="text-align: center; width: 100%; margin: -110px 0px 0px -260px;">
+                        <button id="button_next_7" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                        </button>
+                </div>
+    </div>
+
+    <div class="tab-pane" id="part8" role="tabpanel" aria-labelledby="part8-tab">
+    <div style="padding: 40px 0px 0px 0px;">
+        <table style="width: 110%; margin: 0; padding: 0;">
+            <col width="40%">
+            <col width="0%">
+            <col width="60%">
+            <tr>
+            <td>
+            <table style="width: 100%; margin: -200px 0px 0px -48px;">
+                <tr>
+                    <th colspan="4" rowspan="4" class="hollow" style="transform: rotate(-27.5deg); padding: 80px 0px 0px 0px;"></th>
+                    <th colspan="9" style="font-size: 32px;"><center>Partner</center></th>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 0px 0px 0px 0px">
+                        <div style="padding: 0px 0px 0px 5px; margin: 0;"><input id="id_slider_1" class="slider slider-disabled" style="transform: rotate(180deg); opacity:0.0;" type="range" min="0" max="100" step="1" disabled></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_1"></span></strong></th>
+                    <td colspan="1"></td>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_1_res"></span></strong></th>
+                </tr>
+                <tr>
+                    <!-- Choice lables for col are reversed here if equilibria are off diagonal-->
+                    <th colspan="4"><center><button class="button disabled-{{other_A}}" disabled><strong> &nbsp;{{other_A}}&nbsp; </strong></button></center></th>
+                    <td></td>
+                    <th colspan="4"><center><button class="button disabled-{{other_B}}" disabled><strong> &nbsp;{{other_B}}&nbsp; </strong></button></center></th>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <th rowspan="2" style="transform: rotate(-90deg); font-size: 32px;">You</th>
+                    <td><button id="button_A_1" type="button" class="button button-A"><strong> &nbsp;A&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{a1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{a2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ b1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ c2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <td><button id="button_B_1" type="button" class="button button-B"><strong> &nbsp;B&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ c1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ b2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{d1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{d2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            </td>
+            <td></td>
+            <td><table style="width: 100%; margin: 0">
+                <tr><td>
+                    <div style="width: 100%; margin: -80px 0px 0px -60px; padding: 40px 33px 50px 0px;">
+                        <p style="text-align: left; font-size: 19px; padding: 0px 0px 0px 65px"><strong>Please solve the following practice exercises.</strong></p>
+                        <ol>
+                            <li>What is the highest payoff your Partner can get if you choose <strong>A</strong>?
+                                <div style="padding: 10px 0px 0px 0px; margin: 0px 0px 0px 0px">
+                                    <input type="text" id="text_11" name="text_11" style="margin: 0px 0px 0px 0px; width:12%; text-align:center; font-weight: bold;">&nbsp;points&nbsp;
+                                </div>
+                            </li>
+                            <li>What is the lowest payoff you can get if your Partner chooses <strong>A</strong>?
+                                <div style="padding: 10px 0px 0px 0px; margin: 0px 0px 0px 0px">
+                                    <input type="text" id="text_12" name="text_12" style="margin: 0px 0px 0px 0px; width:12%; text-align:center; font-weight: bold;">&nbsp;points&nbsp;
+                                 </div>
+                            </li>
+                            <li>
+                                Select the choice that gives you the highest payoff in case your partner chooses <strong>B</strong>.
+                            </li>
+                            <li>Do all other participants work on the same tasks as you?
+                                <div style="padding: 10px 0px 0px 0px;">
+                                <input type="radio" id="q13_yes" name="q13" value="Yes">
+                                <label for="q13_yes">Yes</label>&nbsp;&nbsp;
+                                <input type="radio" id="q13_no" name="q13" value="No">
+                                <label for="q13_no">No</label>
+                                </div>
+                            </li>
+                        </ol>
+                    </div>
+                </td></tr>
+            </table></td>
+            </tr>
+        </table>
+    </div>
+                <div style="text-align: center; width: 100%; margin: -120px 0px 0px -258px;">
+                        <button id="button_next_8" onclick="topFunction(); check_results_1(event);" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Check Your Answers.</strong>
+                        </button>
+                </div>
+    </div>   
+
+    <div class="tab-pane" id="part9" role="tabpanel" aria-labelledby="part9-tab">
+        <div style="padding: 30px 130px 0px 190px;">
+        <ul>
+            <li>
+                You have completed the Part-1 instructions.
+            </li>
+            <li>  
+                Feel free to go back and review these pages before moving on.
+            </li>
+            <li>
+                If you have any questions about the instructions, raise your hand. 
+                One of the experimenters will come to your station.
+            </li>
+            <li>
+                Once you are ready, click the button to start.
+            </li>
+        </ul>
+        </div>
+                <div style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                        <button id="button_next_9" onclick="topFunction(); verify(event);" type="submit" class="button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Start Part 1.</strong>
+                        </button>
+                </div>
+    </div>
+
+</div>
+
+{% endblock %}

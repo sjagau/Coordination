@@ -1,0 +1,455 @@
+{% extends "coordination/Page.html" %}
+{% load otree %}
+
+{% block scripts %}
+
+<script>
+$(function(){
+    delay(2000);
+    delay(1000);
+});
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+function bootstrapTabControl(){
+  var i, items = $('.nav-link'), pane = $('.tab-pane'), bar = $('#myTab');
+  // next
+  $('.nexttab').on('click', function(){
+      bar.removeClass('delay_1000');
+
+      for(i = 0; i < pane.length; i++){
+          if($(pane[i]).hasClass('active') == true){
+              break;
+          }
+      }
+      if(i < pane.length - 1){
+          // for tab
+          $(items[i-1]).removeClass('active');
+          $(items[i]).addClass('active');
+          // for pane
+          $(pane[i]).removeClass('show active');
+          $(pane[i+1]).addClass('show active');
+      }
+
+  });
+  // Prev
+  $('.prevtab').on('click', function(){
+      for(i = 0; i < items.length; i++){
+          if($(items[i]).hasClass('active') == true){
+              break;
+          }
+      }
+      if(i != 0){
+          // for tab
+          $(items[i]).removeClass('active');
+          $(items[i-1]).addClass('active');
+          // for pane
+          $(pane[i]).removeClass('show active');
+          $(pane[i-1]).addClass('show active');
+      }
+  });
+}
+bootstrapTabControl();
+
+function check_inputs_0(event) {
+    var input1 = document.getElementById("id_age");
+    var input21 = document.getElementById("id_gender_0");
+    var input22 = document.getElementById("id_gender_1");
+    var input23 = document.getElementById("id_gender_2");
+    var input3 = document.getElementById("id_birth");
+    var input41 = document.getElementById("id_language_0");
+    var input42 = document.getElementById("id_language_1");
+    var input5 = document.getElementById("id_major");
+    var next = document.getElementById("button_next_1");
+
+    if(
+        input1.value == "" ||
+        input3.value == "" ||
+        input5.value == "" ||
+        !(input21.checked == true || input22.checked == true ||  input23.checked == true) ||
+        !(input41.checked == true || input42.checked == true)
+    ){
+        event.stopImmediatePropagation();
+        next.blur();
+        alert('One or more answers are missing, please complete all questions.');
+    }
+
+    }
+
+function check_inputs_1(event) {
+    var input11 = document.getElementById("id_seniority_0");
+    var input12 = document.getElementById("id_seniority_1");
+    var input13 = document.getElementById("id_seniority_2");
+    var input2 = document.getElementById("id_econ_exp");
+    var input3 = document.getElementById("id_stats_exp");
+{% for i in likert %}
+    var input4{{i}} = document.getElementById("id_risk_{{i}}");
+{% endfor %}
+    var next = document.getElementById("button_next_2");
+    if(
+        input2.value == "" ||
+        input3.value == "" ||
+        !(input11.checked == true || input12.checked == true ||  input13.checked == true) ||
+        !({% for i in likert %} input4{{i}}.checked == true{% if i != max %} ||{% endif %}{% endfor %})
+    ){
+        event.stopImmediatePropagation();
+        next.blur();
+        alert('One or more answers are missing, please complete all questions.');
+    }
+
+}
+
+function check_inputs_2(event) {
+    var input1 = document.getElementById("id_CRT_1");
+    var input2 = document.getElementById("id_CRT_2");
+    var input31 = document.getElementById("id_CRT_3_0");
+    var input32 = document.getElementById("id_CRT_3_1");
+    var input33 = document.getElementById("id_CRT_3_2");
+    var input4 = document.getElementById("id_CRT_4");
+    var next = document.getElementById("button_next_3");
+
+    if(
+        input1.value == "" ||
+        input2.value == "" ||
+        input4.value == "" ||
+        !(input31.checked == true || input32.checked == true ||  input33.checked == true)
+    ){
+        event.stopImmediatePropagation();
+        next.blur();
+        alert('One or more answers are missing, please complete all questions.');
+    }
+
+}
+
+function check_inputs_3(event) {
+{% for i in likert %}
+    var input1{{i}} = document.getElementById("id_SVO_1_{{i}}");
+    var input2{{i}} = document.getElementById("id_SVO_2_{{i}}");
+    var input3{{i}} = document.getElementById("id_SVO_3_{{i}}");
+{% endfor %}
+    var next = document.getElementById("button_next_4");
+    if(
+        !({% for i in likert %} input1{{i}}.checked == true{% if i != max %} ||{% endif %}{% endfor %}) ||
+        !({% for i in likert %} input2{{i}}.checked == true{% if i != max %} ||{% endif %}{% endfor %}) ||
+        !({% for i in likert %} input3{{i}}.checked == true{% if i != max %} ||{% endif %}{% endfor %})
+    ){
+        event.stopImmediatePropagation();
+        next.blur();
+        alert('One or more answers are missing, please complete all questions.');
+    }
+
+}
+
+function check_inputs_4(event) {
+    var input1 = document.getElementById("id_freeform");
+    var next = document.getElementById("button_next_5");
+
+    if(
+        input1.value == ""
+        ){
+        event.stopImmediatePropagation();
+        next.blur();
+        alert('One or more answers are missing, please complete all questions.');
+    }
+
+}
+
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+
+<!-- Navbar -->
+<ul class="nav nav-pills  fixed-top navbar-light bg-light delay_1000" id="myTab" role="tablist">
+    <li class="nav-item" style="margin: 12px 70px 2px 70px;"><span style="font-size: 36px; vertical-align: middle;">Survey</span></li>
+    <li class="nav-item" style="margin: 7px 70px 7px 70px;">
+        <a class="nav_1 nav-link disabled" data-toggle="tab" href="#part2" role="tab" aria-controls="part1">
+                #1
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 70px 7px 70px;">
+        <a class="nav_2 nav-link disabled" data-toggle="tab" href="#part3" role="tab" aria-controls="part2">
+                #2
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 70px 7px 70px;">
+        <a class="nav_3 nav-link disabled" data-toggle="tab" href="#part3" role="tab" aria-controls="part3">
+                #3
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 70px 7px 70px;">
+        <a class="nav_4 nav-link disabled" data-toggle="tab" href="#part4" role="tab" aria-controls="part4">
+                #4
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 70px 7px 70px;">
+        <a class="nav_5 nav-link disabled" data-toggle="tab" href="#part5" role="tab" aria-controls="part5">
+                #5
+        </a>
+    </li>
+</ul>
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane show active" id="part0" role="tabpanel" aria-labelledby="part0-tab">
+        <div class="delay_2000" style="width:100%; padding: 50px 200px 0px 180px;">
+            <p style="font-size: 24px; text-align: center;"><strong>
+                You have completed all tasks in this experiment.<br>
+                Thank you for participating.<br>
+                Prior to the results briefing,<br> please fill in the following survey.
+            </strong></p>
+        </div>
+        <div class="delay_2000" style="width: 100%; text-align: center; margin: 50px 0px 0px -20px;">
+            <button id="button_next_0"  onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                <strong style="font-size: 24px; vertical-align:middle">Go to Survey.</strong>
+            </button>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="part1" role="tabpanel" aria-labelledby="part1-tab">
+    <div class="delay_2000">
+
+        <ul style="margin: 60px 80px 10px 270px;">
+            <li style="font-size: 18px;"><div class="fieldWrapper">
+                <label for="id_age">What is your age?</label>&nbsp;
+                <input style="padding:5px 5px 5px 5px; margin:0; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="age" id="id_age">
+            </div></li>
+
+            <li style="font-size: 18px;"><div class="fieldWrapper">
+                <label for="id_gender_0">What is your gender?</label><br>
+                <div class="form-check form-check-inline">
+                <input type="radio" name="gender" value="Male" id="id_gender_0">&nbsp;
+
+                <label for="id_gender_0" class="form-check-label">Male</label>
+            </div>
+
+
+
+            <div class="form-check form-check-inline">
+                <input type="radio" name="gender" value="Female" id="id_gender_1">&nbsp;
+
+                <label for="id_gender_1" class="form-check-label">Female</label>
+            </div>
+
+
+
+            <div class="form-check form-check-inline">
+                <input type="radio" name="gender" value="Other" id="id_gender_2">&nbsp;
+
+                <label for="id_gender_2" class="form-check-label">Other</label>
+            </div>
+            </div></li>
+
+            <!--<li style="font-size: 18px;"><div class="fieldWrapper">
+                <label for="id_ethnicity">What is your ethnicity?</label><br>
+                <input style="padding:5px 5px 5px 10px; margin:0; width: 33.5%; font-weight: bold; text-align: left; font-size: 18px" type="text" name="ethnicity" maxlength="10000" id="id_ethnicity" onchange="check_results_0()">
+                &nbsp;(Press 'Enter' to confirm.)
+            </div></li>-->
+
+            <li style="font-size: 18px;"><div class="fieldWrapper">
+                <label for="id_birth">What country were you born in?</label><br>
+                <input style="padding:5px 5px 5px 10px; margin:0; width: 47%; font-weight: bold; text-align: left; font-size: 18px" type="text" name="birth" maxlength="10000" id="id_birth">
+            </div></li>
+
+            <li style="font-size: 18px;"><div class="fieldWrapper">
+                <label for="id_language_0">Is English your first language?</label><br>
+                <div class="form-check form-check-inline">
+                <input type="radio" name="language" value="English" id="id_language_0">&nbsp;
+
+                <label for="id_language_0" class="form-check-label">Yes</label>
+            </div>
+            <div class="form-check form-check-inline">
+                <input type="radio" name="language" value="Other" id="id_language_1">&nbsp;
+
+                <label for="id_language_1" class="form-check-label">No</label>
+            </div>
+            </div></li>
+            <li style="font-size: 18px;"><div class="fieldWrapper">
+                <p style="margin: 0px 0px 0px 0px;">What is your major/</p><p style="margin: 0px 0px 10px 0px;">your intended field of study?</p>
+                <input style="padding:5px 5px 5px 10px; margin:0; width: 47%; font-weight: bold; text-align: left; font-size: 18px" type="text" name="major" maxlength="10000" id="id_major">
+            </div></li>
+        </ul>
+
+
+    <div style="width: 100%; text-align: center; margin: 30px 0px 0px -10px;">
+            <button id="button_next_1"  onclick="topFunction(); check_inputs_0(event)" type="button" class="nexttab button button-default"><strong>Submit and Proceed.</strong></button>
+    </div>
+    </div>
+    </div>
+
+    <div class="tab-pane" id="part2" role="tabpanel" aria-labelledby="part2-tab">
+    <div class="delay_2000">
+
+        <ul style="margin: 60px 20px 10px 160px;">
+            <li style="font-size: 18px;"><div class="fieldWrapper">
+                <label for="id_seniority_0">Are you a graduate student or an undergraduate student?</label><br>
+                <div class="form-check form-check-inline">
+                <input type="radio" name="seniority" value="Undergraduate" id="id_seniority_0">&nbsp;
+
+                <label for="id_seniority_0" class="form-check-label">Undergraduate</label>
+            </div>
+
+
+
+            <div class="form-check form-check-inline">
+                <input type="radio" name="seniority" value="Graduate" id="id_seniority_1">&nbsp;
+
+                <label for="id_seniority_1" class="form-check-label">Graduate</label>
+            </div>
+
+
+
+            <div class="form-check form-check-inline">
+                <input type="radio" name="seniority" value="Other" id="id_seniority_2">&nbsp;
+
+                <label for="id_seniority_2" class="form-check-label">Other</label>
+            </div>
+            </div></li>
+
+            <li style="font-size: 18px;">
+                How many courses have you taken in economics,<br> excluding econometrics and statistics?&nbsp;
+                    <input style="padding:5px 5px 5px 5px; margin: 10px 0px 0px 0px; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="econ_exp" min="0" id="id_econ_exp">
+            </li>
+
+            <li style="font-size: 18px;">
+                How many courses have you taken in probability,<br> econometrics, or statistics?&nbsp;
+                <input style="padding:5px 5px 5px 5px; margin: 10px 0px 0px 0px; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="stats_exp" min="0" id="id_stats_exp">
+            </li>
+            <li style="font-size: 18px;"><div class="fieldWrapper">
+                In general, how willing are you to take risks?<br>
+            {% for i in likert %}    
+                <div class="form-check form-check-inline">
+                <input type="radio" name="risk" value={{i}} id="id_risk_{{i}}">&nbsp;
+
+                <label for="id_risk_{{i}}" class="form-check-label">{{i}}</label>
+            </div>
+            {% endfor %}
+            <br>(0: "Completely unwilling to take risks"&nbsp;&nbsp;{{max}}: "Very willing to take risks")   
+            </li>
+        </ul>
+
+
+    <div style="width: 100%; text-align: center; margin: 50px 0px 0px -10px;">
+            <button id="button_next_2" onclick="topFunction(); check_inputs_1(event)" type="button" class="nexttab button button-default"><strong>Submit and Proceed.</strong></button>
+    </div>
+        </div>
+    </div>
+
+    <div class="tab-pane" id="part3" role="tabpanel" aria-labelledby="part3-tab">
+        <div class="delay_2000">
+    
+            <ul style="margin: 60px 150px 10px 70px;">
+                <li style="font-size: 18px;"><div class="fieldWrapper">
+                    If John can drink one barrel of water in 6 days, and Mary can drink one barrel of water in 12 days, how long would it take them to drink one barrel of water together?&nbsp;
+                    <input style="padding:5px 5px 5px 5px; margin:0; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="CRT_1" id="id_CRT_1">&nbsp;days
+                </div></li>
+                <li style="font-size: 18px;"><div class="fieldWrapper">
+                    A man buys a pig for $60, sells it for $70, buys it back for $80, and sells it finally for $90. How much has he made?&nbsp;
+                    $&nbsp;<input style="padding:5px 5px 5px 5px; margin:0; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="CRT_2" id="id_CRT_2">
+                </div></li>
+                <li style="font-size: 18px;"><div class="fieldWrapper">                    
+                        Simon decided to invest £8,000 in the stock market one day early in 2008. 
+                        Six months after he invested, on July 17, the stocks he had purchased were down 50%. 
+                        Fortunately for Simon, from July 17 to October 17, the stocks he had purchased went up 75%. 
+                        At this point, Simon...<br>
+                    <div class="form-check form-check-inline">
+                    <input type="radio" name="CRT_3" value=0 id="id_CRT_3_0">&nbsp;
+    
+                    <label for="id_CRT_3_1" class="form-check-label">has broken even.</label>
+                </div>
+    
+    
+    
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="CRT_3" value=1 id="id_CRT_3_1">&nbsp;
+    
+                    <label for="id_CRT_3_1" class="form-check-label">is ahead of where he began. </label>
+                </div>
+    
+    
+    
+                <div class="form-check form-check-inline">
+                    <input type="radio" name="CRT_3" value=-1 id="id_CRT_3_2">&nbsp;
+    
+                    <label for="id_CRT_3_2" class="form-check-label">has lost money.</label>
+                </div>
+                </div></li>
+                <li style="font-size: 18px;"><div class="fieldWrapper">
+                    Jerry received both the 15th highest and the 15th lowest mark in the class. How many students are in the class?&nbsp;
+                    <input style="padding:5px 5px 5px 5px; margin:0; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="CRT_4" id="id_CRT_4">
+                </div></li>
+
+            </ul>
+    
+    
+            <div style="width: 100%; text-align: center; margin: 30px 0px 0px -10px;">
+                <button id="button_next_3"  onclick="topFunction(); check_inputs_2(event)" type="button" class="nexttab button button-default"><strong>Submit and Proceed.</strong></button>
+            </div>
+        </div>
+        </div>
+
+        <div class="tab-pane" id="part4" role="tabpanel" aria-labelledby="part4-tab">
+            <div class="delay_2000">
+                <p style="margin: 60px 00px 00px 100px; font-size: 24px;"><strong>Rate your level of Agreement with each of the statements below.</strong></p>
+                <p style="margin: 00px 40px 10px 280px; font-size: 18px;"><strong>(0: "strongly disagree"&nbsp;&nbsp;10: "strongly agree")</strong></p>
+                <ul style="margin: 10px 20px 10px 130px;">
+                    <li style="font-size: 18px;"><div class="fieldWrapper">
+                        When someone does me a favor I am willing to return it.<br>
+                    {% for i in likert %}    
+                        <div class="form-check form-check-inline">
+                        <input type="radio" name="SVO_1" value={{i}} id="id_SVO_1_{{i}}">&nbsp;
+        
+                        <label for="id_SVO_1_{{i}}" class="form-check-label">{{i}}</label>
+                    </div>
+                    {% endfor %}
+                    </li>
+                    <li style="font-size: 18px;"><div class="fieldWrapper">
+                        I am willing to give to good causes without expecting anything in return.<br>
+                    {% for i in likert %}    
+                        <div class="form-check form-check-inline">
+                        <input type="radio" name="SVO_2" value={{i}} id="id_SVO_2_{{i}}">&nbsp;
+        
+                        <label for="id_SVO_2_{{i}}" class="form-check-label">{{i}}</label>
+                    </div>
+                    {% endfor %}
+                    </li>
+                    <li style="font-size: 18px;"><div class="fieldWrapper">
+                        I assume that people have only the best intentions.<br>
+                    {% for i in likert %}    
+                        <div class="form-check form-check-inline">
+                        <input type="radio" name="SVO_3" value={{i}} id="id_SVO_3_{{i}}">&nbsp;
+        
+                        <label for="id_SVO_3_{{i}}" class="form-check-label">{{i}}</label>
+                    </div>
+                    {% endfor %}  
+                    </li>
+                </ul>
+        
+        
+            <div style="width: 100%; text-align: center; margin: 30px 0px 0px 0px;">
+                    <button id="button_next_4" onclick="topFunction(); check_inputs_3(event)" type="button" class="nexttab button button-default"><strong>Submit and Proceed.</strong></button>
+            </div>
+                </div>
+            </div>
+
+        <div class="tab-pane" id="part5" role="tabpanel" aria-labelledby="part5-tab">
+            <div class="delay_2000">
+        
+                <ul style="margin: 60px 20px 10px 120px;">
+                    <li style="font-size: 18px;"><div class="fieldWrapper">
+                        <label for="id_freeform">How do you think people made their decisions in this experiment?</label>&nbsp;
+                        <textarea style="padding:5px 5px 5px 5px; margin:0; height: 150px; width: 560px; font-weight: bold; text-align: start; font-size: 18px" type="text" name="freeform" id="id_freeform"></textarea>
+                    </div></li>    
+                </ul>
+        
+        
+                <div style="width: 100%; text-align: center; margin: 30px 0px 0px -20px;">
+                    <button id="button_next_5"  onclick="topFunction(); check_inputs_4(event)" type="submit" class="button button-default"><strong>Submit.</strong></button>
+            </div>
+            </div>
+            </div>
+</div>
+{% endblock %}

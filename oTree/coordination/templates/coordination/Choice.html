@@ -1,0 +1,467 @@
+{% extends "coordination/Page.html" %}
+{% load otree %}
+{% load staticfiles %}
+
+{% block styles %}
+
+    <style>
+    li {
+    font-size: 19px;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+//Soft timer; red color if less than 1 minute, flashing display if less than 10 seconds left
+var starttime=new Date(); hs=starttime.getHours(); ms=starttime.getMinutes(); ss=starttime.getSeconds();
+record_nav('page', 'start');
+
+function startTime() {
+	var today=new Date();
+    var h=today.getHours()-hs;
+    //hours immediately settled against minutes
+	var m=today.getMinutes()+h*60-ms;
+	var s=today.getSeconds()-ss;
+    var timer = document.getElementById('id_time_left');
+	m={{ tlimit }}-m;
+	s=0-s;
+	if (s<0)
+	{
+	s=s+60;
+	m=m-1;
+	}
+    //time remaining
+	if (m>=0) {
+        // generate display, adding zeros where necessary
+	    mdisp=timeDisp(m);
+	    sdisp=timeDisp(s);
+        timer.innerHTML=mdisp+":"+sdisp;
+        // red text-color if less than 1 minute left
+        if (m<1){
+            timer.style.color = "#ff0000";
+	    }
+        if (m<=0 && s<=10){
+            timer.classList.add('blink_me');
+        }
+	} else {//time is up
+        timer.innerHTML="00:00";
+    }
+    //loop
+	t=setTimeout('startTime()',500);
+}
+
+function timeDisp(i){
+	    if (i<10) {
+	        i="0" + i.toString();
+	    } else {
+            i = i.toString();
+        }
+	    return i;
+}
+
+window.onload = function() {
+    startTime();
+}
+
+
+
+
+$(function(){
+    delay(1000);
+    var bar = $('#myTab');
+    bar.removeClass('delay_1000');
+});
+
+//Next button controls
+function bootstrapTabControl(){
+  var i, items = $('.nav-link'), pane = $('.tab-pane'), table = $('.payoff-table'), button = $('.next-div');
+  $('.nexttab').on('click', function(){
+
+      for(i = 0; i < items.length; i++){
+          if($(items[i]).hasClass('active') == true){
+              break;
+          }
+      }
+      if(i < items.length - 1){
+          // for tab
+          if ($(items[i]).hasClass('nav-current') == true){
+            $(items[i]).removeClass('nav-current');
+            $(items[i+1]).addClass('nav-current');
+          }
+          $(items[i]).removeClass('active');
+          $(items[i]).html("#"+({% if min > 1 %}{{min}}-1+{% endif %}i+1).toString());
+          $(items[i+1]).removeClass('disabled');
+          $(items[i+1]).addClass('active'); 
+          //$(items[i+1]).attr('onclick', 'update_panels('+ (i+2).toString()+'); topFunction();');
+          if(i < items.length - 2){
+            $(items[i+1]).html("Task #"+({% if min > 1 %}{{min}}-1+{% endif %}i+2).toString());
+          } else {
+            $(items[i]).html("Task #"+({% if min > 1 %}{{min}}-1+{% endif %}i+1).toString());
+          }
+
+          // for pane
+          $(pane[i]).removeClass('show active');
+          $(pane[i+1]).addClass('show active');
+
+          // remove delay from table
+          $(table[i]).removeClass('delay_1000');
+          $(table[i+1]).removeClass('delay_1000');
+          // remove delay from button
+          $(button[i]).removeClass('delay_1000');
+          $(button[i+1]).removeClass('delay_1000');
+      }
+
+  });
+  // Prev
+}
+bootstrapTabControl();
+
+//Nav-times controls
+function update_panels(r) {
+    var i, items = $('.nav-link'), pane = $('.tab-pane');
+    // next
+    for(i = 0; i < items.length; i++){
+        if($(items[i]).hasClass('disabled') == true){
+            break;
+        }
+        if ($(items[i]).hasClass('nav_' + r.toString())== true){
+            $(items[i]).addClass('active');
+            $(items[i]).html("Task #"+({% if min > 1 %}{{min}}-1+{% endif %}i+1).toString());
+            $(pane[i]).addClass('show active');
+        } else {
+            $(items[i]).removeClass('active');
+            $(pane[i]).removeClass('show active');
+            if ($(items[i]).hasClass('nav_end') == false){
+                $(items[i]).html("#"+({% if min > 1 %}{{min}}-1+{% endif %}i+1).toString());
+            }
+        }
+    }
+}
+
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+//Live-send function for nav-log; triggered by next-buttons and nav-items
+function record_nav(type, number) {
+    var time = Date.now();
+    liveSend({'type': type, 'number': number, 'time': time});
+    if (number == "submit") {
+        document.getElementById("id_choice_end_time").value=time;
+    } else if (number == "start") {
+        document.getElementById("id_choice_start_time").value=time;
+    }
+}
+
+//Live-send function for preliminary inputs; triggered by sliders and choice-buttons
+function record_input(type, choice, problem) {
+    var time = Date.now();
+    liveSend({'type': type, 'game': problem, 'value': choice, 'time': time});
+}
+
+
+{% for g,r in indices %}
+    //Choice button controls
+    function set_choice_{{ g }}(choice) {
+        document.getElementById("id_choice_{{ g }}").value=choice;
+        var next = document.getElementById("button_next_{{ g }}");
+        //Recorded as preliminary input
+        record_input('choice', choice, {{ g }});
+
+        if (choice == 'A') {
+            var selected = document.getElementById("button_A_{{ g }}");
+            var other = document.getElementById("button_B_{{ g }}");
+            selected.classList.remove("button-A")
+            selected.classList.add("button-A-selected")
+            other.classList.remove("button-B-selected")
+            other.classList.add("button-B")
+        } else {
+            var selected = document.getElementById("button_B_{{ g }}");
+            var other = document.getElementById("button_A_{{ g }}");
+            selected.classList.remove("button-B")
+            selected.classList.add("button-B-selected")
+            other.classList.remove("button-A-selected")
+            other.classList.add("button-A")
+        }
+        //Choice input unlocks next-button and nav-panel
+        next.classList.remove("disabled-default");
+        next.classList.add("button-default");
+        next.removeAttribute("disabled");
+        var i, items = $('.nav-link');
+        for(i = 0; i < items.length; i++){
+          if($(items[i]).hasClass('active') == false){
+              $(items[i]).removeClass('disabled');
+              $(items[i]).disabled = false;
+          }
+          if($(items[i]).hasClass('nav-current') == true){
+              break;
+          }
+        }
+    }
+{% if beliefs == 1 %}
+    //Slider controls
+    var slider_{{ g }} = document.getElementById("id_slider_{{ g }}");
+
+    //When slider is moved
+    slider_{{ g }}.oninput = function() {
+        var output = document.getElementById("slider_value_{{ g }}");
+        var output_res = document.getElementById("slider_value_{{ g }}_res");
+        var button_A = document.getElementById("button_A_{{ g }}");
+        var button_B = document.getElementById("button_B_{{ g }}");
+        var slider = document.getElementById("id_slider_{{ g }}");
+        var next = document.getElementById("button_next_{{ g }}");
+        var prob = this.value;
+
+        //Moving the slider disables the nav-panel
+        var i, items = $('.nav-link');
+        for(i = 0; i < items.length; i++){
+          if($(items[i]).hasClass('active') == false){
+              $(items[i]).addClass('disabled');
+              $(items[i]).disabled = true;
+          }
+          if($(items[i]).hasClass('nav-current') == true){
+            break;
+          }
+        }
+
+        output.innerHTML = prob.toString() + "%";
+        output_res.innerHTML = (100-prob).toString() + "%";
+
+        //Moving the slider undoes previous choice-input
+        button_A.classList.remove("disabled-A");
+        button_A.classList.remove("button-A-selected");
+        button_A.classList.add("button-A");
+        button_A.removeAttribute("disabled");
+        button_B.classList.remove("disabled-B");
+        button_B.classList.remove("button-B-selected");
+        button_B.classList.add("button-B");
+        button_B.removeAttribute("disabled");
+
+        slider.classList.add("slider-selected");
+
+        //Moving the slider disables next-button
+        next.classList.add("disabled-default");
+        next.classList.remove("button-default");
+        next.disabled = true;
+    }
+
+    //When slider is released
+    slider_{{ g }}.onchange = function() {
+        var prob = this.value;
+        record_input('belief', prob, {{ g }});
+    }
+{% endif %}    
+
+    //When active nav-item is clicked
+    var nav_{{ g }} = document.getElementById("id_nav_{{ g }}");
+
+    nav_{{ g }}.onclick = function() {
+        if (!(this.classList.contains('disabled') || this.classList.contains('active'))) {
+            record_nav('nav', {{ g }});
+            update_panels({{ r }});
+            topFunction();
+        }
+    }
+
+{% endfor %}
+
+//When nav-item for final submission page is clicked
+var nav_end = document.getElementById("id_nav_end");
+
+nav_end.onclick = function() {
+    if (!(this.classList.contains('disabled') || this.classList.contains('active'))) {
+        record_nav('nav', 'end');
+        topFunction();
+        var i, items = $('.nav-link'), pane = $('.tab-pane');
+        for(i = 0; i < items.length; i++){
+            if (i < items.length-1) {
+                $(items[i]).removeClass('active');
+                $(pane[i]).removeClass('show active');
+            } else {
+                $(items[i]).addClass('active');
+                $(pane[i]).addClass('show active');
+            }
+        }
+        
+            
+    }    
+}
+
+//Confirmation of final submission
+function verify(event) {
+    var r = confirm("You are now exiting {% if num_round == 1 %}Part 1{% elif num_round < num_rounds %}tasks {{min}}\u2013{{max}}{% else %}Part 2{% endif %}.\nIf you confirm, your submission for {% if num_round == 1 %}Part1{% else %}Tasks {{min}}\u2013{{max}}{% endif %} will be final!");
+    if (r == false) {
+        event.preventDefault();
+        document.getElementById("button_end").blur();
+        record_nav('button', 'submit_canceled');
+    } else{
+        var endtime=new Date();
+        record_nav('button', 'submit');
+    }
+}
+
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<ul class="nav nav-pills  fixed-top navbar-light bg-light justify-content-center delay_1000" id="myTab" role="tablist">
+    <li class="nav-item" style="margin: 18px 20px 7px 0px;"><span style="font-size: 32px; vertical-align: middle; margin:0; padding: 0;">Part {{num_part}}</span></li>
+    {% for g,r in indices %}
+        <li class="nav-item" style="margin: 7px 20px 7px 0px;">
+            <a id = "id_nav_{{ g }}" class="nav-link nav_{{ r }} {% if r == min %} active nav-current {% else %} disabled {% endif %}" data-toggle="tab" href="#part{{ r }}" role="tab" aria-controls="part{{ r }}">
+                {% if r == min %}Task{% endif %} #{{ r }}
+            </a>
+        </li>
+    {% endfor %}
+     <li class="nav-item" style="margin: 7px 20px 7px 0px;">
+         <a id = "id_nav_end" class="nav_end nav-link disabled" data-toggle="tab" href="#end" role="tab" aria-controls="end">
+                Submit
+         </a>
+     </li>
+     <li class="nav-item" style="margin: 7px 0px 7px 0px;"><span style="font-size: 24px; vertical-align: middle; margin:0; padding: 0;">TIME:</span><br><span id="id_time_left" style="font-size: 24px; vertical-align: middle; margin:0; padding: 0;">00:00</span></li>
+</ul>
+
+
+
+<!-- Tab content; game matrix -->
+<div class="tab-content" id="myTabContent">
+    {% for g,r,a1,b1,c1,d1,a2,b2,c2,d2 in input %}
+        <div class="tab-pane {% if r == min %} show active {% endif %}" id="part{{ r }}" role="tabpanel" aria-labelledby="part{{ r }}-tab">
+                <table style="width: 110%; margin: 0; padding: 0;">
+                <col width="35%">
+                <col width="0%">
+                <col width="65%">
+                <tr>
+                <td><table class="payoff-table delay_1000" style="width: 100%; margin: -80px 0px 0px -60px;">
+                    <tr>
+                        <th colspan="4" rowspan="4" class="hollow" style="padding: 80px 0px 0px 0px;"></th>
+                        <th colspan="9" style="font-size: 32px;"><center>Partner</center></th>
+                    </tr>
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 0px 0px 0px 0px">
+                            <div style="padding: 0px 0px 0px 5px; margin: 0;">{% if beliefs == 1 %}<input id="id_slider_{{ g }}" class="slider" style="transform: rotate(180deg);" type="range" name="belief_{{ g }}" min="0" max="100" step="1">{% endif %}</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px">{% if beliefs == 1 %}<strong> <span id="slider_value_{{ g }}"></span></strong>{% endif %}</th>
+                        <td></td>
+                        <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px">{% if beliefs == 1 %}<strong> <span id="slider_value_{{ g }}_res"></span></strong>{% endif %}</th>
+                    </tr>
+                    <!-- Choice lables for col are reversed here if equilibria are off diagonal-->
+                    <tr>
+                        <th colspan="4"><center><button class="button disabled-{{other_A}}" disabled><strong> &nbsp;{{other_A}}&nbsp; </strong></button></center></th>
+                        <td></td>
+                        <th colspan="4"><center><button class="button disabled-{{other_B}}" disabled><strong> &nbsp;{{other_B}}&nbsp; </strong></button></center></th>
+                    </tr>
+                    <tr class="highlight-row-on-hover">
+                        <th rowspan="2" style="padding: 0px 15px 45px 15px; margin: 0px 0px 0px 0px; transform: rotate(-90deg); font-size: 32px;">You</th>
+                        <td><button id="button_A_{{ g }}" type="button" class="button {% if beliefs == 1 %}disabled-A" disabled {% else %} button-A" {% endif %} onclick="set_choice_{{ g }}('A')"><strong> &nbsp;A&nbsp; </strong></button></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ a1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ a2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ b1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ c2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                    <tr class="highlight-row-on-hover">
+                        <td><button id="button_B_{{ g }}" type="button" class="button {% if beliefs == 1 %}disabled-B" disabled {% else %} button-B" {% endif %} onclick="set_choice_{{ g }}('B')"><strong> &nbsp;B&nbsp; </strong></button></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ c1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ b2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ d1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ d2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    </tr>
+                    </table>
+                </td>
+                <td></td>
+                <td><table style="width: 100%; margin: 50px 0px 0px 55px" class="{% if r == min %}delay_1000{% endif %}">
+                    <tr><td>
+                        <div style="width: 100%; margin: 0px 0px 0px 0px; padding: {% if beliefs == 1 %}0px 165px 50px{% else %}50px 145px 150px{% endif %} 0px;">
+                        <ol>
+                        {% if beliefs == 1 %} 
+                        <li>   
+                            <strong>Belief:</strong> Move the slider to select the probabilities that your partner chooses A or B.
+                        </li>
+                        {% endif %}
+                        <li>
+                            {% if beliefs == 1 %}<strong>Choice:</strong> After selecting your belief, s{% else %}S{% endif %}elect your {% if beliefs == 1 %}own{% endif %} choice using the buttons on the left.
+                        </li>
+                        <li>
+                            You can freely adjust your initial inputs.
+                            {% if beliefs == 1 %}If you change your belief about your partner's choice, you must also redo your own choice.{% endif %}
+                        </li>
+                        <li>
+                            Use the navigation bar to come back to this task and modify your inputs at any time until the final submission {% if num_round == 1 %}for Part 1{% else %}of Tasks {{min}}&ndash;{{max}}{% endif %}.
+                        </li>
+                        </ol>
+                        </div>
+                    </td></tr>
+                </table></td>
+                </tr>
+                </table>
+                <div class="next-div delay_1000" style="float: left; width: 50%; margin: -80px 0px 0px 136px;">
+                        <button id="button_next_{{ g }}" onclick="topFunction(); delay('1000'); record_nav('button', {{ g }});" type="button" class="nexttab button disabled-default" style="padding:10px 16px 16px 16px;" disabled>
+                            <strong style="font-size: 24px; vertical-align:middle">Next Task</strong>
+                        </button>
+                </div>
+                <input id="id_choice_{{ g }}" name="choice_{{ g }}" type="hidden"/>
+        </div>
+    {% endfor %}
+    <!--Tab content; final submission page-->
+    <div class="tab-pane" id="end" role="tabpanel" aria-labelledby="end-tab">
+        <center>
+            <div class="delay_1000" style="padding: 30px 130px 0px 180px;">
+                <ul>
+                    <li>You have reached the final submission for {% if num_round == 1 %}Part 1{% else %}Tasks {{min}}&ndash;{{max}}{% endif %}.</li>
+                    <li>You can still go back and change your inputs for each task.</li>
+                    <li>
+                        Once you are happy with your inputs, click the button below to submit and move on to {% if num_round == 1 %}Part 2{% elif num_round < num_rounds %}Tasks {{next_min}}&ndash;{{next_max}}{% else %}the Survey{% endif %}.
+                    </li>
+                    <li>
+                        You will not receive any feedback until the end of session.
+                    </li>
+                    <li>
+                        At the end of session, we randomly pick {% if beliefs == 0%}one of the tasks in Part 1 {% elif beliefs == 1 %}either one of your choices or one of your beliefs out of Tasks {{min}}&ndash;{{max}} {% endif %}for payment.
+                    </li>
+                    <li>
+                        For the selected task, you will then get a full results briefing.
+                    </li>
+                </ul>
+            </div>
+            <div class="delay_1000" style="padding: 20px 0px 0px 40px">
+                <button id="button_end" onclick="topFunction(); verify(event);" type="submit" style="padding:10px 16px 16px 16px;" class="nexttab button button-default">
+                    <strong style="font-size: 26px; vertical-align:middle">Submit and Proceed to {% if num_round ==  1 %}Part 2{% elif num_round < num_rounds %}Tasks {{next_min}}&ndash;{{next_max}}{% else %}Survey{% endif %}.</strong>
+                </button>
+            </div>
+        </center>
+    </div>
+</div>
+{{ form.errors }}
+<!--Hidden inputs to record time subject spends on page-->
+<input id="id_choice_start_time" name="choice_start_time" type="hidden"/>
+<input id="id_choice_end_time" name="choice_end_time" type="hidden"/>
+{% endblock %}
+

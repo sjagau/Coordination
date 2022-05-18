@@ -1,0 +1,671 @@
+{% extends "coordination/Page.html" %}
+{% load otree %}
+{% load staticfiles %}
+
+{% block styles %}
+
+    <style>
+    li {
+    font-size: 19px;
+    margin: 0px 100px 10px 53px;
+        }
+    
+    .sub-li {
+            font-size: 18px;
+            margin: 0px 0px 8px -20px;
+            }
+
+    .sub-li2 {
+            font-size: 16px;
+            margin: 0px 0px 2px -20px;
+            }
+
+    input[type=text]:focus {
+        border: 2px solid black;
+        outline: 0;
+    }
+
+    </style>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+var starttime=new Date();
+record_time('start_2');
+
+$(function(){
+    delay(2000);
+    delay(1000);
+});
+
+//Next-button controls
+function bootstrapTabControl(){
+  var i, items = $('.nav-link'), pane = $('.tab-pane'), bar = $('#myTab');
+    $('.nexttab').on('click', function(){
+      bar.removeClass('delay_1000');
+
+      for(i = 0; i < items.length; i++){
+          if($(items[i]).hasClass('active') == true){
+              break;
+          }
+      }
+      if(i < items.length - 1){
+          // for tab
+          if ($(items[i]).hasClass('nav-current') == true){
+            $(items[i]).removeClass('nav-current');
+            $(items[i+1]).addClass('nav-current');
+          }
+          $(items[i]).removeClass('active');
+          $(items[i+1]).removeClass('disabled');
+          $(items[i+1]).addClass('active');
+          $(items[i+1]).attr('onclick', 'update_panels('+ (i+2).toString()+'); topFunction();');
+
+          // for pane
+          $(pane[i]).removeClass('show active');
+          $(pane[i+1]).addClass('show active');
+      }
+    });
+}
+bootstrapTabControl();
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+//Live-send to record time on page and time taken for quizzes
+function record_time(type) {
+    var time = Date.now();
+    liveSend({'type': type, 'time': time});
+}
+
+    var button_B_0 = document.getElementById("button_B_0");
+    var button_A_0 = document.getElementById("button_A_0");
+
+    button_B_0.onclick = function() {
+            button_B_0.classList.add("button-B-selected");
+            button_B_0.classList.remove("button-B");
+            button_A_0.classList.remove("button-A-selected");
+            button_A_0.classList.add("button-A");
+    }
+
+    button_A_0.onclick = function() {
+            button_B_0.classList.remove("button-B-selected");
+            button_B_0.classList.add("button-B");
+            button_A_0.classList.add("button-A-selected");
+            button_A_0.classList.remove("button-A");
+    }
+
+    var slider_0 = document.getElementById("id_slider_0");
+
+    slider_0.oninput = function() {
+        var output = document.getElementById("slider_value_0");
+        var output_res = document.getElementById("slider_value_0_res");
+        var prob = this.value;
+        output.innerHTML = prob.toString() + "%";
+        output_res.innerHTML = (100-prob).toString() + "%";
+        slider_0.classList.add("slider-selected");
+    }
+
+
+    button_B_1.onclick = function() {
+            button_B_1.classList.add("button-B-selected");
+            button_B_1.classList.remove("button-B");
+            button_A_1.classList.remove("button-A-selected");
+            button_A_1.classList.add("button-A");
+    }
+
+
+    button_A_1.onclick = function() {
+            button_B_1.classList.remove("button-B-selected");
+            button_B_1.classList.add("button-B");
+            button_A_1.classList.add("button-A-selected");
+            button_A_1.classList.remove("button-A");
+    }
+
+    var slider_1 = document.getElementById("id_slider_1");
+
+    slider_1.oninput = function() {
+        var output = document.getElementById("slider_value_1");
+        var output_res = document.getElementById("slider_value_1_res");
+        var prob = this.value;
+        output.innerHTML = prob.toString() + "%";
+        output_res.innerHTML = (100-prob).toString() + "%";
+        slider_1.classList.add("slider-selected");
+    }
+
+    var button_B_2 = document.getElementById("button_B_2");
+    var button_A_2 = document.getElementById("button_A_2");
+
+    button_B_2.onclick = function() {
+            button_B_2.classList.add("button-B-selected");
+            button_B_2.classList.remove("button-B");
+            button_A_2.classList.remove("button-A-selected");
+            button_A_2.classList.add("button-A");
+    }
+
+    button_A_2.onclick = function() {
+            button_B_2.classList.remove("button-B-selected");
+            button_B_2.classList.add("button-B");
+            button_A_2.classList.add("button-A-selected");
+            button_A_2.classList.remove("button-A");
+    }
+
+    var slider_2 = document.getElementById("id_slider_2");
+
+    slider_2.oninput = function() {
+        var output = document.getElementById("slider_value_2");
+        var output_res = document.getElementById("slider_value_2_res");
+        var prob = this.value;
+        output.innerHTML = prob.toString() + "%";
+        output_res.innerHTML = (100-prob).toString() + "%";
+        slider_2.classList.add("slider-selected");
+    }
+
+    var button_B_2 = document.getElementById("button_B_2");
+    var button_A_2 = document.getElementById("button_A_2");
+
+    button_B_2.onclick = function() {
+            button_B_2.classList.add("button-B-selected");
+            button_B_2.classList.remove("button-B");
+            button_A_2.classList.remove("button-A-selected");
+            button_A_2.classList.add("button-A");
+    }
+
+    button_A_2.onclick = function() {
+            button_B_2.classList.remove("button-B-selected");
+            button_B_2.classList.add("button-B");
+            button_A_2.classList.add("button-A-selected");
+            button_A_2.classList.remove("button-A");
+    }
+
+    function check_results_0() {
+        var input1 = document.getElementById("text_0");
+        var input3 = document.getElementById("text_1");
+        var input4 = document.getElementById("text_2");
+        var input21 = document.getElementById("q01_yes");
+        var input22 = document.getElementById("q01_no");
+        var input51 = document.getElementById("q02_yes");
+        var input52 = document.getElementById("q02_no");
+        var next = document.getElementById("button_next_5");
+
+        if(!(input1.value == "1" && input3.value == "{{belief_high|cut:" points"}}" && input4.value == "{{belief_low|cut:" points"}}" && input22.checked == true && input52.checked == true && slider_2.value == "{% if beliefs_quiz == 1%}23{% else %}77{% endif %}")){
+            event.stopImmediatePropagation();
+            next.blur();            
+            alert('One or more answers are missing or incorrect, please review.');
+        } else {
+            alert('Success! You answered all questions correctly.');
+            input1.setAttribute("disabled", "");
+            input3.setAttribute("disabled", "");
+            input4.setAttribute("disabled", "");
+            input21.setAttribute("disabled", "");
+            input22.setAttribute("disabled", "");
+            input51.setAttribute("disabled", "");
+            input52.setAttribute("disabled", "");
+            slider_2.setAttribute("disabled", "");
+            next.onclick = 'topFunction(); delay(2000);';
+            next.innerHTML = '<strong style="font-size: 24px; vertical-align:middle">Proceed.</strong>';
+            delay(2000);
+            record_time('quiz_2');
+        }
+
+    }
+
+    function verify(event) {
+        var r = confirm("You are now exiting the introduction. Confirm to start Part 2.");
+        if (r == false) {
+            event.preventDefault();
+            document.getElementById("button_next_6").blur();
+        } else {
+            var endtime=new Date();
+            record_time('end_2');
+        }
+    }
+
+
+
+
+
+</script>
+{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<ul class="nav nav-pills  fixed-top navbar-light bg-light justify-content-center delay_1000" id="myTab" role="tablist">
+    <li class="nav-item" style="margin: 18px 10px 7px 10px;"><span style="font-size: 32px; vertical-align: middle; margin:0; padding: 0;">Part 2</span></li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_1 nav-link active nav-current" data-toggle="tab" href="#part1" role="tab" aria-controls="part1">
+                Instructions
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_2 nav-link disabled" data-toggle="tab" href="#part2" role="tab" aria-controls="part2">
+                Practice Task #1
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_3 nav-link disabled" data-toggle="tab" href="#part3" role="tab" aria-controls="part3">
+                #2
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_4 nav-link disabled" data-toggle="tab" href="#part4" role="tab" aria-controls="part4">
+                #3
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_5 nav-link disabled" data-toggle="tab" href="#part5" role="tab" aria-controls="part5">
+                #4
+        </a>
+    </li>
+    <li class="nav-item" style="margin: 7px 10px 7px 10px;">
+        <a class="nav_6 nav-link disabled" data-toggle="tab" href="#part6" role="tab" aria-controls="part6">
+                Start Part 2
+        </a>
+    </li>
+</ul>
+
+
+
+<!-- Tab content -->
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane show active" id="part1" role="tabpanel" aria-labelledby="part1-tab">
+    <div class="delay_2000" style="padding: 30px 100px 0px 220px;">
+        <ul>           
+            <li>
+                In Part 2, you complete {{num_tasks}} tasks. The tasks are given to you in two batches of {{num_games}} tasks each.
+            </li>
+            <li>
+                The structure of Part 2 is very similar to Part 1. In particular:
+                <ul>
+                    <li class="sub-li">
+                        You will not get any feedback about the results of Part 2 until the very end of session. 
+                    </li>
+                    <li class="sub-li">
+                        Your decisions in one batch of {{num_games}} tasks do not affect outcomes in the other batch or in Part 1.
+                    </li>
+                    <li class="sub-li">
+                        You can go back and revise all {{num_games}} tasks in a batch until moving on to the next batch.
+                    </li>
+                    <li class="sub-li">
+                        For each batch, you will have {{tlimit}} minutes to make your decisions.
+                    </li>
+                    <li class="sub-li">
+                        The same is true for all other participants.
+                    </li>
+                </ul>
+        </ul>
+    </div>
+                <div class="delay_2000" style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                        <button id="button_next_1" onclick="topFunction(); delay(2000);" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                        </button>
+                </div>
+    </div>
+
+    <div class="tab-pane" id="part2" role="tabpanel" aria-labelledby="part2-tab">
+    <div style="padding: 40px 0px 0px 0px;" >
+        <table style="width: 110%; margin: 0; padding: 0;">
+            <col width="40%">
+            <col width="0%">
+            <col width="60%">
+            <tr>
+            <td>
+            <table style="width: 100%; margin: -195px 0px 0px -100px;">
+                <tr>
+                    <th colspan="4" rowspan="4" class="hollow" style="transform: rotate(-27.5deg); padding: 80px 0px 0px 0px;"></th>
+                    <th colspan="9" style="font-size: 32px;"><center>Partner</center></th>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 0px 0px 0px 0px">
+                        <div style="padding: 0px 0px 0px 5px; margin: 0;"><input id="id_slider_0" class="slider" style="transform: rotate(180deg);" type="range" min="0" max="100" step="1"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_0"></span></strong></th>
+                    <td colspan="1"></td>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_0_res"></span></strong></th>
+                </tr>
+                <tr>
+                    <!-- Choice lables for col are reversed here if equilibria are off diagonal-->
+                    <th colspan="4"><center><button class="button disabled-{{other_A}}" disabled><strong> &nbsp;{{other_A}}&nbsp; </strong></button></center></th>
+                    <td></td>
+                    <th colspan="4"><center><button class="button disabled-{{other_B}}" disabled><strong> &nbsp;{{other_B}}&nbsp; </strong></button></center></th>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <th rowspan="2" style="transform: rotate(-90deg); font-size: 32px;">You</th>
+                    <td><button id="button_A_0" type="button" class="button button-A"><strong> &nbsp;A&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong class="payoff">{{a1|cut:"points"}}</strong></td>
+                    <td><strong class="payoff-opp">{{a2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong class="payoff">{{ b1|cut:"points"}}</strong></td>
+                    <td><strong class="payoff-opp">{{ c2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <td><button id="button_B_0" type="button" class="button button-B"><strong> &nbsp;B&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong class="payoff">{{ c1|cut:"points"}}</strong></td>
+                    <td><strong class="payoff-opp">{{ b2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong class="payoff">{{d1|cut:"points"}}</strong></td>
+                    <td><strong class="payoff-opp">{{d2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            </td>
+            <td></td>
+            <td><table style="width: 100%; margin: 0">
+                <tr><td>
+                    <div style="width: 126%; margin: -80px 0px 0px -160px; padding: 40px 33px 50px 0px;">
+                        <ul>
+                            <li>
+                               The Part-2 tasks are again depicted by tables like this one.
+                            </li>
+                            <li>
+                                Use the buttons on the left to make your choice.
+                            </li>
+                            <li>
+                                Before making your own choice, we now also ask you for your <strong>belief</strong> about the choice of your partner.
+                            </li>
+                            <li>
+                                Use the slider above the table to indicate your belief.
+                            </li>
+                            <li>
+                                Where you move the slider will represent your best assessment of the probability (chance out of 100) that your partner chooses <strong>A</strong> or <strong>B</strong>.
+                            </li>
+                            <li>
+                                As you move the slider, your selected probabilities of your partner choosing <strong>A</strong> or <strong>B</strong> will appear above the corresponding table columns. (Try it!)
+                            </li>
+                            <li>
+                                Also in Part 2, all tables we use are symmetric. All other participants work through the same tasks as you, including stating their beliefs.
+                            </li>
+                        </ul>
+                    </div>
+                </td></tr>
+            </table></td>
+            </tr>
+        </table>
+    </div>
+                <div style="text-align: center; width: 100%; margin: -130px 0px 0px -310px;">
+                        <button id="button_next_2" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                        </button>
+                </div>
+    </div>
+
+    <div class="tab-pane" id="part3" role="tabpanel" aria-labelledby="part3-tab">
+        <div style="padding: 40px 0px 0px 0px;" >
+            <table style="width: 110%; margin: 0; padding: 0;">
+                <col width="40%">
+                <col width="0%">
+                <col width="60%">
+                <tr>
+                <td>
+                <table style="width: 100%; margin: -175px 0px 0px -100px;">
+                    <tr>
+                        <th colspan="4" rowspan="4" class="hollow" style="transform: rotate(-27.5deg); padding: 80px 0px 0px 0px;"></th>
+                        <th colspan="9" style="font-size: 32px;"><center>Partner</center></th>
+                    </tr>
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 0px 0px 0px 0px">
+                            <div style="padding: 0px 0px 0px 5px; margin: 0;"><input id="id_slider_1" class="slider" style="transform: rotate(180deg);" type="range" min="0" max="100" step="1"></div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_1"></span></strong></th>
+                        <td colspan="1"></td>
+                        <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_1_res"></span></strong></th>
+                    </tr>
+                    <tr>
+                        <!-- Choice lables for col are reversed here if equilibria are off diagonal-->
+                        <th colspan="4"><center><button class="button disabled-{{other_A}}" disabled><strong> &nbsp;{{other_A}}&nbsp; </strong></button></center></th>
+                        <td></td>
+                        <th colspan="4"><center><button class="button disabled-{{other_B}}" disabled><strong> &nbsp;{{other_B}}&nbsp; </strong></button></center></th>
+                    </tr>
+                    <tr class="highlight-row-on-hover">
+                        <th rowspan="2" style="transform: rotate(-90deg); font-size: 32px;">You</th>
+                        <td><button id="button_A_1" type="button" class="button button-A"><strong> &nbsp;A&nbsp; </strong></button></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong class="payoff">{{a1|cut:"points"}}</strong></td>
+                        <td><strong class="payoff-opp">{{a2|cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong class="payoff">{{ b1|cut:"points"}}</strong></td>
+                        <td><strong class="payoff-opp">{{ c2|cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr class="highlight-row-on-hover">
+                        <td><button id="button_B_1" type="button" class="button button-B"><strong> &nbsp;B&nbsp; </strong></button></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong class="payoff">{{ c1|cut:"points"}}</strong></td>
+                        <td><strong class="payoff-opp">{{ b2|cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong class="payoff">{{d1|cut:"points"}}</strong></td>
+                        <td><strong class="payoff-opp">{{d2|cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </table>
+                </td>
+                <td></td>
+                <td><table style="width: 100%; margin: 0">
+                    <tr><td>
+                        <div style="width: 126%; margin: -80px 0px 0px -160px; padding: 40px 33px 50px 0px;">
+                            <ul>
+                                <li>
+                                    For each of the two {{num_games}} task batches in Part 2, one task is randomly picked to count towards your payment at the end of session.
+                                </li>
+                                <li>
+                                    For one of these two tasks, you get paid based on your own choice and based on the choice of a randomly selected partner (just like in Part 1).
+                                </li>
+                                <li>    
+                                    For the other one, you get paid based on your belief and based on the actual choice of a randomly selected partner.
+                                </li>
+                                <li>   
+                                    We randomly pick which task is paid based on your choice and which one is paid based on your belief.
+                                </li>
+                                <li>
+                                    When you are paid for your belief, we also match you with a randomly selected partner.  Your belief and the partner's actual choice on the task decide your chance of winning a high prize of {{belief_high}} over a low prize of {{belief_low}}.
+                                </li>    
+                            </ul>
+                        </div>
+                    </td></tr>
+                </table></td>
+                </tr>
+            </table>
+        </div>
+                    <div style="text-align: center; width: 100%; margin: -110px 0px 0px -310px;">
+                            <button id="button_next_3" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                                <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                            </button>
+                    </div>
+        </div>
+
+        <div class="tab-pane" id="part4" role="tabpanel" aria-labelledby="part4-tab">
+            <div style="width: 118%; padding: 30px 100px 0px 220px;">
+                <ul>
+                    <li>
+                        The procedure that decides your chance of winning the high prize is described below.
+                    </li>
+                    <li>   
+                        Given your partner's actual choice, the procedure is designed to give you the best shot at winning precisely if you submit your true prediction of the probabilities that your partner chooses A or B.
+                    </li>         
+                    <li>Description of Procedure:    
+                        <ol>
+                            <li class="sub-li2">
+                                We randomly draw two numbers. For each draw, all numbers between 0 and 100 (including decimals) are equally likely. Draws are fully independent: The outcome of the first draw does not affect the outcome of the second one. 
+                            </li>
+                            <li class="sub-li2">
+                                In case your partner chooses A and the probability you put on them choosing A is larger than at least one of the two draws, you win the high prize of {{belief_high}}.
+                            </li>
+                            <li class="sub-li2">
+                                In case your partner chooses B and the probability you put on them choosing B is larger than at least one of the two draws, you win the high prize of {{belief_high}}.
+                            </li>
+                            <li class="sub-li2">
+                                In all other cases, you get the low prize of {{belief_low}}.
+                            </li>
+                        </ol>
+                        <li>    
+                            Would you like to learn why this procedure makes it best for you to report your true beliefs? Just ask the experimenters after the session.        
+                        </li>
+                    </ul>
+            </div>
+                        <div style="text-align: center; width: 100%; margin: 10px 0px 0px 0px;">
+                                <button id="button_next_4" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                                    <strong style="font-size: 24px; vertical-align:middle">Confirm and Proceed.</strong>
+                                </button>
+                        </div>
+            </div>
+
+    <div class="tab-pane" id="part5" role="tabpanel" aria-labelledby="part5-tab">
+    <div style="padding: 40px 0px 0px 0px;">
+        <table style="width: 110%; margin: 0; padding: 0;">
+            <col width="40%">
+            <col width="0%">
+            <col width="60%">
+            <tr>
+            <td>
+            <table style="width: 100%; margin: -335px 0px 0px -100px;">
+                <tr>
+                    <th colspan="4" rowspan="4" class="hollow" style="transform: rotate(-27.5deg); padding: 80px 0px 0px 0px;"></th>
+                    <th colspan="9" style="font-size: 32px;"><center>Partner</center></th>
+                </tr>
+                <tr>
+                    <td colspan="9" style="text-align: center; padding: 0px 0px 0px 0px">
+                        <div style="padding: 0px 0px 0px 5px; margin: 0;"><input id="id_slider_2" class="slider" style="transform: rotate(180deg);" type="range" min="0" max="100" step="1"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_2"></span></strong></th>
+                    <td colspan="1"></td>
+                    <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong> <span id="slider_value_2_res"></span></strong></th>
+                </tr>
+                <tr>
+                    <!-- Choice lables for col are reversed here if equilibria are off diagonal-->
+                    <th colspan="4"><center><button class="button disabled-{{other_A}}" disabled><strong> &nbsp;{{other_A}}&nbsp; </strong></button></center></th>
+                    <td></td>
+                    <th colspan="4"><center><button class="button disabled-{{other_B}}" disabled><strong> &nbsp;{{other_B}}&nbsp; </strong></button></center></th>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <th rowspan="2" style="transform: rotate(-90deg); font-size: 32px;">You</th>
+                    <td><button id="button_A_2" type="button" class="button button-A"><strong> &nbsp;A&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{a1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{a2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ b1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ c2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr class="highlight-row-on-hover">
+                    <td><button id="button_B_2" type="button" class="button button-B"><strong> &nbsp;B&nbsp; </strong></button></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ c1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ b2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{d1|cut:"points"}}</strong></td>
+                    <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{d2|cut:"points"}}</strong></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+            </td>
+            <td></td>
+            <td><table style="width: 100%; margin: 0">
+                <tr><td>
+                    <div style="width: 126%; margin: -80px 0px 0px -160px; padding: 40px 33px 50px 0px;">
+                        <p style="text-align: left; font-size: 19px; padding: 0px 0px 0px 75px"><strong>Please solve the following practice exercises.</strong></p>
+                        <ol>
+                            <li>
+                                Adjust the slider such that you predict your partner to choose <strong>B</strong> with probability 23% and <strong>A</strong> with probability 77%.
+                            </li>
+                            <li>Assume you indeed think your partner will choose <strong>B</strong> with probability 23% and <strong>A</strong> with probability 77%. Is there any prediction that would give you an equal or better shot at winning the high prize than the one from (1)?
+                                <div style="padding: 10px 0px 0px 0px;">
+                                <input type="radio" id="q01_yes" name="q01" value="Yes">
+                                <label for="q01_yes">Yes</label>&nbsp;&nbsp;
+                                <input type="radio" id="q01_no" name="q01" value="No">
+                                <label for="q01_no">No</label>
+                                </div>
+                            </li>
+                            <li>
+                                In Part 2, how many tasks are you paid for per {{num_games}} task batch?<br>
+                                <input type="text" id="text_0" name="text_0" style="margin: 5px 0px 0px 0px; width:12%; text-align:center; font-weight: bold;">
+                            </li>
+                            <li>In Part 2, can you be paid for both your choice and your belief on the same task?
+                                <div style="padding: 10px 0px 0px 0px;">
+                                <input type="radio" id="q02_yes" name="q02" value="Yes">
+                                <label for="q02_yes">Yes</label>&nbsp;&nbsp;
+                                <input type="radio" id="q02_no" name="q02" value="No">
+                                <label for="q02_no">No</label>
+                                </div>
+                            </li>
+                            <li>What are the high and low prizes you may get based on your belief?<br>
+                                <strong>High: </strong><input type="text" id="text_1" name="text_1" style="margin: 5px 0px 0px 0px; width:12%; text-align:center; font-weight: bold;">&nbsp;
+                                <strong>Low: </strong><input type="text" id="text_2" name="text_2" style="margin: 5px 0px 0px 0px; width:12%; text-align:center; font-weight: bold;">                            
+                            </li>
+                        </ol>
+                    </div>
+                </td></tr>
+            </table></td>
+            </tr>
+        </table>
+    </div>
+                <div class="delay_2000" style="text-align: center; width: 100%; margin: -245px 0px 0px -310px;">
+                        <button id="button_next_5" onclick="topFunction(); check_results_0(event)" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Check Your Answers.</strong>
+                        </button>
+                </div>
+    </div> 
+
+    <div class="tab-pane" id="part6" role="tabpanel" aria-labelledby="part6-tab">
+        <div style="padding: 30px 100px 0px 220px;">
+        <ul>
+            <li>
+                You have completed the Part-2 instructions.
+            </li>
+            <li>    
+                Feel free to go back and review these pages before moving on.
+            </li>
+            <li>
+                If you have any questions about the instructions, raise your hand. One of the experimenters will come to your station.
+            </li>
+            <li>
+                Once you are ready, click the button to start.
+            </li>
+        </ul>
+        </div>
+                <div style="text-align: center; width: 100%; margin: 30px 0px 0px 0px;">
+                        <button id="button_next_6" onclick="topFunction(); verify(event);" type="submit" class="button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Start Part 2.</strong>
+                        </button>
+                </div>
+    </div>
+
+</div>
+
+{% endblock %}

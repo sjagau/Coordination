@@ -1,0 +1,475 @@
+{% extends "global/Page.html" %}
+{% load otree %}
+
+{% block app_styles %}
+<style>
+    body {
+        background-color: #ffffff;
+    }
+
+    /* The slider itself */
+    .slider {
+        -webkit-appearance: none;
+        /* Override default CSS styles */
+        appearance: none;
+        border-radius: 5px;
+        width: 70%;
+        /* Full-width */
+        height: 10px;
+        /* Specified height */
+        background: #d3d3d3;
+        /* Grey background */
+        outline: none;
+        /* Remove outline */
+        opacity: 0.7;
+        /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s;
+        /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+    }
+
+    .slider-selected::-webkit-slider-thumb {
+        border: 2px solid black;
+    }
+
+    .slider-disabled {
+        cursor: not-allowed !important;
+    }
+
+    .slider-disabled::-webkit-slider-thumb {
+        cursor: not-allowed !important;
+    }
+
+    .slider-disabled:hover {
+        opacity: 0.7 !important;
+    }
+
+
+    /* Mouse-over effects */
+    .slider:hover {
+        opacity: 1;
+        /* Fully shown on mouse-over */
+    }
+
+    /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        /* Override default look */
+        appearance: none;
+        width: 25px;
+        /* Set a specific slider handle width */
+        height: 25px;
+        /* Slider handle height */
+        border-radius: 10px;
+        background: #4CAF50;
+        /* Green background */
+        cursor: pointer;
+        /* Cursor on hover */
+    }
+
+    .slider::-webkit-slider-thumb:active {
+        border: 2px solid black;
+    }
+
+
+
+    .nav-pills .nav-link {
+        padding: 16px 16px 16px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 20px;
+        margin: 2px 2px;
+        -webkit-transition-duration: 0.4s;
+        /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 20px;
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+    }
+
+    .nav-pills .nav-link.active {
+        background-color: #4CAF50;
+        border: 2px solid black;
+    }
+
+
+    .nav-pills .nav-link.disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+    }
+
+    .nav-pills .nav-link.disabled.active {
+        opacity: 1;
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid black;
+        outline: 0 !important;
+    }
+
+    .nav-pills .nav-link:not(.disabled):hover {
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid #4CAF50;
+        outline: 0 !important;
+    }
+
+    .nav-pills .nav-link:not(.disabled).active:hover {
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid black;
+        outline: 0 !important;
+    }
+
+    .nav-pills .nav-link:not(.disabled):focus {
+        background-color: #4CAF50;
+        border: 2px solid black;
+    }
+
+    .button {
+        padding: 16px 16px 16px 16px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 24px;
+        margin: 2px 2px;
+        -webkit-transition-duration: 0.4s;
+        /* Safari */
+        transition-duration: 0.4s;
+        cursor: pointer;
+        border-radius: 20px;
+        outline: 0;
+    }
+
+    .button-default {
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+    }
+
+    .button-default:hover {
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid #4CAF50;
+    }
+
+    .button-default:active {
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-default:focus {
+        background-color: #4CAF50;
+        color: white;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .disabled-default {
+        opacity: 0.4;
+        cursor: not-allowed !important;
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+    }
+
+    .disabled-default:active {
+        opacity: 0.4;
+        cursor: not-allowed !important;
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+        outline: 0;
+    }
+
+    .disabled-default:focus {
+        opacity: 0.4;
+        cursor: not-allowed !important;
+        background-color: white;
+        color: black;
+        border: 2px solid #4CAF50;
+        outline: 0;
+    }
+
+    .frame {
+        border-radius: 25px;
+        border: 2px solid #4CAF50;
+        padding: 5px 60px 15px 0px;
+    }
+
+    tr,
+    th,
+    td {
+        border: none;
+    }
+
+    table {
+        border: none;
+    }
+
+    td,
+    th {
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    th {
+        padding: 15px 15px 0px 15px;
+    }
+
+    td {
+        padding: 15px 0px 15px 5px;
+    }
+
+    .hollow {
+        color: white;
+        text-shadow: -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+    }
+
+    table tr td:empty {
+        width: 15px;
+    }
+
+
+    li {
+        font-weight: bold;
+        font-size: 18px;
+        margin: 0px 0px 20px 35px;
+        text-align: justify;
+    }
+
+    .button-A {
+        background-color: white;
+        color: black;
+        border: 2px solid #f6cc00;
+    }
+
+    .button-A-RPD-res {
+        background-color: white;
+        color: black;
+        border: 2px solid #f6cc00;
+        cursor: not-allowed;
+    }
+
+    .button-A:hover {
+        background-color: #f6cc00;
+        color: white;
+        border: 2px solid #f6cc00;
+    }
+
+    .button-A:active {
+        background-color: #f6cc00;
+        color: white;
+        border: 2px solid #f6cc00;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-A:focus {
+        background-color: #f6cc00;
+        color: white;
+        border: 2px solid #f6cc00;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-A-selected {
+        background-color: #f6cc00;
+        color: white;
+        border: 2px solid #f6cc00;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-A-selected:active {
+        background-color: #f6cc00;
+        color: white;
+        border: 2px solid #f6cc00;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-A-selected:focus {
+        background-color: #f6cc00;
+        color: white;
+        border: 2px solid #f6cc00;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-B {
+        background-color: white;
+        color: black;
+        border: 2px solid #33bbff;
+    }
+
+    .button-B-RPD-res {
+        background-color: white;
+        color: black;
+        border: 2px solid #33bbff;
+        cursor: not-allowed;
+    }
+
+    .button-B:hover {
+        background-color: #33bbff;
+        color: white;
+        border: 2px solid #33bbff;
+
+    }
+
+    .button-B:active {
+        background-color: #33bbff;
+        color: white;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-B:focus {
+        background-color: #33bbff;
+        color: white;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-B-selected {
+        background-color: #33bbff;
+        color: white;
+        border: 2px solid #33bbff;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .button-B-selected:focus {
+        background-color: #33bbff;
+        color: white;
+        border: 2px solid #33bbff;
+        border: 2px solid #000000;
+        outline: 0;
+    }
+
+    .disabled-A {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background-color: white;
+        color: black;
+        border: 2px solid #f6cc00;
+    }
+
+    .disabled-B {
+        opacity: 0.4;
+        cursor: not-allowed;
+        background-color: white;
+        color: black;
+        border: 2px solid #33bbff;
+    }
+
+    .highlight-row-on-hover:hover td {
+        background-color: #f2f2f2;
+    }
+
+    .highlight-results {
+        background-color: #f2f2f2;
+    }
+
+    .button-B-results {
+        background-color: #33bbff;
+        color: white;
+        border: 2px solid #000000;
+        outline: 0;
+        cursor: not-allowed;
+    }
+
+    .button-A-results {
+        background-color: #f6cc00;
+        color: white;
+        border: 2px solid #f6cc00;
+        border: 2px solid #000000;
+        outline: 0;
+        cursor: not-allowed;
+    }
+
+    .payoff {
+        font-size: 24px;
+        color: #CC2200;
+        text-shadow: 0.5px 0.5px #000000;
+    }
+
+
+    .payoff-opp {
+        font-size: 24px;
+        color: #000000;
+        text-shadow: 0.5px 0.5px #000000;
+        opacity: 0.7;
+    }
+
+    .dot-A {
+        height: 25px;
+        width: 25px;
+        background-color: #f6cc00;
+        border-radius: 35%;
+        display: inline-block;
+    }
+
+    .dot-B {
+        height: 25px;
+        width: 25px;
+        background-color: #33bbff;
+        border-radius: 35%;
+        display: inline-block;
+    }
+
+    .dot-lg {
+        height: 54px;
+        width: 54px;
+    }
+
+    .prev {
+        border: 2px solid black;
+    }
+
+    .blink_me {
+        animation: blinker 1s linear infinite;
+    }
+
+    @keyframes blinker {
+        50% {
+            opacity: 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block app_scripts %}
+
+
+
+<script>
+    function delay(time) {
+        var t = parseFloat(time);
+        $('.delay_' + time).hide().delay().fadeIn(t);
+    }
+
+    $('form').submit(function () {
+        if ($(document.activeElement).attr('type') == 'submit')
+            return true;
+        else return false;
+    });
+
+    $(document).ready(function() {
+        $(window).keydown(function(event){
+          if(event.keyCode == 116) {
+            event.preventDefault();
+            return false;
+          }
+        });
+      });
+</script>
+
+{% endblock %}

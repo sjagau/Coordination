@@ -1,0 +1,266 @@
+{% extends "coordination/Page.html" %}
+{% load otree %}
+{% load staticfiles %}
+
+{% block styles %}
+
+    <style>
+    li {
+    font-size: 19px;
+    margin: 0px 100px 10px 53px;
+        }
+
+    </style>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+
+$(function(){
+    delay(2000);
+    delay(1000);
+});
+
+//Next button controls
+function bootstrapTabControl(){
+  var i, items = $('.nav-link'), pane = $('.tab-pane'), bar = $('#myTab');
+  $('.nexttab').on('click', function(){
+      bar.removeClass('delay_1000');
+
+      for(i = 0; i < items.length; i++){
+          if($(items[i]).hasClass('active') == true){
+              break;
+          }
+      }
+      if(i < items.length - 1){
+          // for tab
+          if ($(items[i]).hasClass('nav-current') == true){
+            $(items[i]).removeClass('nav-current');
+            $(items[i+1]).addClass('nav-current');
+          }
+          $(items[i]).removeClass('active');
+          $(items[i+1]).removeClass('disabled');
+          $(items[i+1]).addClass('active'); 
+          // for pane
+          $(pane[i]).removeClass('show active');
+          $(pane[i+1]).addClass('show active');
+      }
+
+  });
+  // Prev
+}
+bootstrapTabControl();
+
+function update_panels(r) {
+    var i, items = $('.nav-link'), pane = $('.tab-pane');
+    // next
+    for(i = 0; i < items.length; i++){
+        if($(items[i]).hasClass('disabled') == true){
+            break;
+        }
+        if ($(items[i]).hasClass('nav_' + r.toString())== true){
+            $(items[i]).addClass('active');
+            $(pane[i]).addClass('show active');
+        } else {
+            $(items[i]).removeClass('active');
+            $(pane[i]).removeClass('show active');
+        }
+    }
+}
+
+
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
+
+{% for r,min,max in indices %}
+
+    var nav_{{ r }} = document.getElementById("id_nav_{{ r }}");
+
+    nav_{{ r }}.onclick = function() {
+        if (!(this.classList.contains('disabled') || this.classList.contains('active'))) {
+            update_panels({{ r }});
+            topFunction();
+        }
+    }
+
+{% endfor %}
+
+var nav_end = document.getElementById("id_nav_end");
+
+nav_end.onclick = function() {
+    if (!(this.classList.contains('disabled') || this.classList.contains('active'))) {
+        topFunction();
+        var i, items = $('.nav-link'), pane = $('.tab-pane');
+        for(i = 0; i < items.length; i++){
+            if (i < items.length-1) {
+                $(items[i]).removeClass('active');
+                $(pane[i]).removeClass('show active');
+            } else {
+                $(items[i]).addClass('active');
+                $(pane[i]).addClass('show active');
+            }
+        }
+        
+            
+    }    
+}
+
+
+
+
+</script>
+
+{% endblock %}
+
+{% block content %}
+<!-- Navbar -->
+<ul class="nav nav-pills  fixed-top navbar-light bg-light justify-content-center delay_1000" id="myTab" role="tablist">
+    <li class="nav-item" style="margin: 16px 80px 0px 0px;"><span style="font-size: 32px; vertical-align: middle;">Results</span></li>
+{% for r,min,max in indices %}
+        <li class="nav-item" style="margin: 7px 60px 7px 0px;">
+            <a id = "id_nav_{{ r }}" class="nav-link nav_{{ r }} {% if r == 1 %} active nav-current {% else %} disabled {% endif %}" data-toggle="tab" href="#part{{ r }}" role="tab" aria-controls="part{{ r }}">
+                {% if r == 1 %}Part 1{% else %}Part 2, Tasks {{ min }}&ndash;{{ max }}{% endif %}
+            </a>
+        </li>
+{% endfor %}
+     <li class="nav-item" style="margin: 7px 80px 7px 0px;">
+         <a id = "id_nav_end" class="nav_end nav-link disabled" data-toggle="tab" href="#end" role="tab" aria-controls="end">
+                Your Payment
+         </a>
+     </li>
+</ul>
+
+
+
+<!-- Tab content -->
+<div class="tab-content" id="myTabContent">
+    {% for r,min,max,g,t,a1,b1,c1,d1,a2,b2,c2,d2,own,other,other_A,other_B,payoff in inputs %}
+        <div class="tab-pane {% if r == 1 %} show active {% endif %}" id="part{{ r }}" role="tabpanel" aria-labelledby="part{{ r }}-tab">
+                <table style="width: 110%; margin: 0; padding: 0;">
+                <col width="40%">
+                <col width="0%">
+                <col width="60%">
+                <tr>
+                <td><table class="delay_2000" style="width: 100%; margin: {% if t == 0 %}0px{% else %}-220px{% endif %} 0px 0px -90px;">
+                    <tr>
+                        <th colspan="4" rowspan="4" class="hollow" style="padding: 80px 0px 0px 0px;"></th>
+                        <th colspan="9" style="font-size: 32px;"><center>Partner</center></th>
+                    </tr>
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 0px 0px 0px 0px">
+                            {% if t == 1 %}<div style="padding: 0px 0px 0px 5px; margin: 0;"><input id="id_slider_{{ r }}" class="slider slider-selected" style="transform: rotate(180deg);" type="range" name="belief_{{ r }}" min="0" max="100" step="1" value="{{own}}" disabled></div>
+                            {% else %}<div style="padding: 0px 0px 0px 5px; margin: 0; opacity: 0;"><input id="id_slider_{{ r }}" class="slider slider-selected" style="transform: rotate(180deg);" type="range" name="belief_{{ r }}" min="0" max="100" step="1" disabled></div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong>{% if t == 1%}<span id="slider_value_{{ r }}">{{own}}%</span>{% endif %}</strong></th>
+                        <td></td>
+                        <th colspan="4" style="text-align: center; padding: 0px 0px 0px 0px"><strong>{% if t == 1%}<span id="slider_value_{{ r }}_res">{{resid}}%</span>{% endif %}</strong></th>
+                    </tr>
+                    <tr>
+                        <th colspan="4"><center><button class="button {% if other == other_A %}button-{{other_A}}-selected{% else %}disabled-{{other_A}}{% endif %}" disabled><strong> &nbsp;{{other_A}}&nbsp; </strong></button></center></th>
+                        <td></td>
+                        <th colspan="4"><center><button class="button {% if other == other_B %}button-{{other_B}}-selected{% else %}disabled-{{other_B}}{% endif %}" disabled><strong> &nbsp;{{other_B}}&nbsp; </strong></button></center></th>
+                    </tr>
+                    <tr>
+                        <th rowspan="2" style="padding: 0px 15px 45px 15px; margin: 0px 0px 0px 0px; transform: rotate(-90deg); font-size: 32px;">You</th>
+                        <td><button id="button_A_{{ r }}" type="button" class="button {% if t == 0 and own == 'A' %}button-A-selected {% else %}disabled-A{% endif %}" disabled><strong> &nbsp;A&nbsp; </strong></button></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ a1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ a2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ b1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ c2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        </tr>
+                    <tr>
+                        <td><button id="button_B_{{ r }}" type="button" class="button {% if t == 0 and own == 'B' %} button-B-selected{% else %} disabled-B{% endif %}" disabled><strong> &nbsp;B&nbsp; </strong></button></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ c1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ b2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td><strong style="padding: 0px 0px 0px 10px;" class="payoff">{{ d1 |cut:"points"}}</strong></td>
+                        <td><strong style="padding: 0px 0px 0px 0px;" class="payoff-opp">{{ d2 |cut:"points"}}</strong></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                    </tr>
+                    </table>
+                </td>
+                <td></td>
+                <td><table style="width: 100%; margin: 0" class="delay_1000">
+                    <tr><td>
+                        <div style="width: 105%; margin: {% if r == 1 %}-180px{% elif t == 1 %}-30px{% else %}-85px{% endif %} 0px 0px 20px; padding: 40px 33px 50px 0px;">
+                        <ul>
+                        <li> For <strong>Part {% if r == 1 %}1{% else %}2{% endif %}</strong>, <strong>Task #{{g}}</strong> was randomly selected for payment out of <strong>Tasks {{min}}&ndash;{{max}}</strong>.</li>
+                    {% if r > 1%}    
+                        <li> For this task your <strong>{% if t == 0 %}choice{% else %}belief{% endif %}</strong> was randomly selected to determine your payment.</li>
+                    {% endif %} 
+                    {% if t == 0 %}    
+                        <li>   
+                            You choose <strong>{{ own }}</strong>, 
+                            and your randomly selected partner for this task chose <strong>{{ other }}</strong>.
+                        </li>
+                        <li>   
+                            Hence, your payoff for {% if r == 1 %}Part 1{% else %}Part 2, Tasks {{min}}&ndash;{{max}}{% endif %} is <strong>{{ payoff }}</strong>.
+                        </li> 
+                    {% else %}
+                        <li>   
+                            You predicted that your Partner would choose <strong>{{other_A}}</strong> with probability <strong>{{ own|floatformat:0 }}%</strong> and <strong>{{other_B}}</strong> with probability <strong>{{ resid|floatformat:0 }}%</strong>, 
+                            and your randomly selected partner for this task chose <strong>{{other}}</strong>.
+                        </li>
+                        <li>
+                            To determine whether your prediction earned you the high prize of <strong>{{belief_high}}</strong> or the low prize of <strong>{{belief_low}}</strong>, we drew two random numbers, <strong>{{rd1|floatformat:2}}</strong> and <strong>{{rd2|floatformat:2}}</strong>.
+                        </li>
+                        <li>Given that your partner chose <strong>{{other}}</strong>, your probability of <strong>{% if other == other_A %}{{ own|floatformat:0 }}{% elif other == other_B %}{{ resid|floatformat:0 }}{% endif %}%</strong> on <strong>{{other}}</strong> had to be larger than at least one of the two random draws to win.</li>
+                        <li>   
+                            Since <strong>{% if other == other_A %}{{ own|floatformat:0 }}{% elif other == other_B %}{{ resid|floatformat:0 }}{% endif %}
+                            </strong>{% if payoff == belief_high %} is{% elif payoff == belief_low %} is not{% endif %} larger than <strong>{{rd_min|floatformat:2}}</strong>, 
+                            your payoff for this task is <strong>{{payoff}}</strong>.
+                        </li>
+                    {% endif %}   
+                        </ul>
+                        </div>
+                    </td></tr>
+                </table></td>
+                </tr>
+                </table>
+                <div class="delay_2000" style="text-align: center; width: 100%; margin: {% if t == 0 %}0px{% else %}-220px{% endif %} 0px 0px -265px;">
+                        <button id="button_next_{{ r }}" onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
+                            <strong style="font-size: 24px; vertical-align:middle">Proceed.</strong>
+                        </button>
+                </div>
+        </div>
+    {% endfor %}
+    <div class="tab-pane" id="end" role="tabpanel" aria-labelledby="end-tab">
+        <center>
+            <div class="delay_2000" style="width: 100%; padding: 100px 120px 0px 180px">
+                <ul>
+                    <li>
+                        In total, you earned 
+                        <strong>{% for r,payoff in payoffs_list %}{{ payoff |cut:"points"}}{% if r != num_rounds %} + {% else %} = {% endif %}{% endfor %}
+                        {{total_points}}</strong>.</li>
+                    <li>With every {{ real_equivalent|floatformat:0 }} points being worth $1, that makes <strong>${{total_dollars|floatformat:2}}</strong>. Adding the ${{participation_fee|floatformat:0}} participation fee, your total payoff is therefore <strong>${{total_payoff|floatformat:2}}</strong>.</li>
+                    <li>Please remain at your workstation until you are called. After signing for your payment, you are good to go.</li>
+                    <li>The payment will be made to you eletronically within the next 24 hours.</li>
+                </ul>
+            </div>
+        </center>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,19 @@
+{% extends "otree/WaitPage.html" %}
+{% load otree %}
+{% block global_styles %}
+<style>
+    .hollow {
+        color: white;
+        text-shadow: -1px -1px 0 #000,  1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;
+        font-size: 32px;
+    }
+</style>
+{% endblock %}
+
+
+{% block title %}
+<p class="hollow"><strong>Please wait</strong></p>
+{% endblock %}
+{% block content %}
+<p style="font-size: 24px"><strong>{{ body_text }}</strong></p>
+{% endblock %}
