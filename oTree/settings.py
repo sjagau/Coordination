@@ -7,15 +7,15 @@ APPS_v33 = [
         name='coordination',
         display_name="Coordination",
         num_demo_participants=6,
-        app_sequence=[
-            'coordination', 
+        app_sequence=[ 
+            'coordination',
             'survey',
             'results'
             ],
         real_world_currency_per_point=1/6,
         participation_fee=10.00,
         use_browser_bots=False,
-        first_list=2,
+        first_list=0,
         duration=60,
         tlimit=8,
     ),
@@ -63,7 +63,7 @@ ADMIN_USERNAME = 'admin'
 ADMIN_PASSWORD = environ.get('OTREE_ADMIN_PASSWORD')
 
 DEMO_PAGE_INTRO_HTML = """
-Here are some oTree games.
+oTree Webserver, Project: Big bucks, no whammies.
 """
 
 

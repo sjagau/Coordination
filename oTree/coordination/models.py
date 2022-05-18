@@ -367,6 +367,20 @@ class Player(BasePlayer):
                 inputs[p] = [choices, beliefs, input_dicts, nav_dict, choice_start_time, choice_end_time]
             print('Inputs in order of list sequence:', inputs)
 
+def custom_export(players):
+    # Scrambling data in chronological order
+    yield ['session', 'participant_code', 'round_number', 'list', 'it_order', 'labels_self', 'labels_other']
+    for p in players:
+        yield [
+            p.session.code,
+            p.participant.code,
+            p.round_number,
+            p.participant.vars['list_sequence'][p.round_number-1],
+            p.participant.vars['it_order_'+str(p.round_number)],
+            p.participant.vars['ch_order_self_'+str(p.round_number)],
+            p.participant.vars['ch_order_other_'+str(p.round_number)],
+        ]
+
 
 
 
