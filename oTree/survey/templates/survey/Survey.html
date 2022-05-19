@@ -29,6 +29,7 @@ function bootstrapTabControl(){
           // for tab
           $(items[i-1]).removeClass('active');
           $(items[i]).addClass('active');
+          $(items[i]).removeClass('disabled');
           // for pane
           $(pane[i]).removeClass('show active');
           $(pane[i+1]).addClass('show active');
@@ -168,12 +169,12 @@ function check_inputs_4(event) {
 <ul class="nav nav-pills  fixed-top navbar-light bg-light delay_1000" id="myTab" role="tablist">
     <li class="nav-item" style="margin: 12px 70px 2px 70px;"><span style="font-size: 36px; vertical-align: middle;">Survey</span></li>
     <li class="nav-item" style="margin: 7px 70px 7px 70px;">
-        <a class="nav_1 nav-link disabled" data-toggle="tab" href="#part2" role="tab" aria-controls="part1">
+        <a class="nav_1 nav-link disabled" data-toggle="tab" href="#part1" role="tab" aria-controls="part1">
                 #1
         </a>
     </li>
     <li class="nav-item" style="margin: 7px 70px 7px 70px;">
-        <a class="nav_2 nav-link disabled" data-toggle="tab" href="#part3" role="tab" aria-controls="part2">
+        <a class="nav_2 nav-link disabled" data-toggle="tab" href="#part2" role="tab" aria-controls="part2">
                 #2
         </a>
     </li>
@@ -195,14 +196,14 @@ function check_inputs_4(event) {
 </ul>
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane show active" id="part0" role="tabpanel" aria-labelledby="part0-tab">
-        <div class="delay_2000" style="width:100%; padding: 50px 200px 0px 180px;">
+        <div class="delay_1000" style="width:100%; padding: 50px 200px 0px 180px;">
             <p style="font-size: 24px; text-align: center;"><strong>
                 You have completed all tasks in this experiment.<br>
                 Thank you for participating.<br>
                 Prior to the results briefing,<br> please fill in the following survey.
             </strong></p>
         </div>
-        <div class="delay_2000" style="width: 100%; text-align: center; margin: 50px 0px 0px -20px;">
+        <div class="delay_1000" style="width: 100%; text-align: center; margin: 50px 0px 0px -20px;">
             <button id="button_next_0"  onclick="topFunction();" type="button" class="nexttab button button-default" style="padding:10px 16px 16px 16px;">
                 <strong style="font-size: 24px; vertical-align:middle">Go to Survey.</strong>
             </button>
@@ -210,7 +211,7 @@ function check_inputs_4(event) {
     </div>
 
     <div class="tab-pane" id="part1" role="tabpanel" aria-labelledby="part1-tab">
-    <div class="delay_2000">
+    <div>
 
         <ul style="margin: 60px 80px 10px 270px;">
             <li style="font-size: 18px;"><div class="fieldWrapper">
@@ -281,7 +282,7 @@ function check_inputs_4(event) {
     </div>
 
     <div class="tab-pane" id="part2" role="tabpanel" aria-labelledby="part2-tab">
-    <div class="delay_2000">
+    <div>
 
         <ul style="margin: 60px 20px 10px 160px;">
             <li style="font-size: 18px;"><div class="fieldWrapper">
@@ -339,7 +340,7 @@ function check_inputs_4(event) {
     </div>
 
     <div class="tab-pane" id="part3" role="tabpanel" aria-labelledby="part3-tab">
-        <div class="delay_2000">
+        <div>
     
             <ul style="margin: 60px 150px 10px 70px;">
                 <li style="font-size: 18px;"><div class="fieldWrapper">
@@ -379,7 +380,7 @@ function check_inputs_4(event) {
                 </div></li>
                 <li style="font-size: 18px;"><div class="fieldWrapper">
                     Jerry received both the 15th highest and the 15th lowest mark in the class. How many students are in the class?&nbsp;
-                    <input style="padding:5px 5px 5px 5px; margin:0; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="CRT_4" id="id_CRT_4">
+                    <input style="padding:5px 5px 5px 5px; margin:0; width: 10%; font-weight: bold; text-align: center; font-size: 18px" type="number" name="CRT_4" id="id_CRT_4">&nbsp;students
                 </div></li>
 
             </ul>
@@ -436,7 +437,7 @@ function check_inputs_4(event) {
             </div>
 
         <div class="tab-pane" id="part5" role="tabpanel" aria-labelledby="part5-tab">
-            <div class="delay_2000">
+            <div>
         
                 <ul style="margin: 60px 20px 10px 120px;">
                     <li style="font-size: 18px;"><div class="fieldWrapper">
