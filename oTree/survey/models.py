@@ -69,8 +69,8 @@ class Player(BasePlayer):
         min=0,
         max=Constants.likert-1)
 
-    CRT_1 = models.IntegerField()
-    CRT_2 = models.IntegerField()
+    CRT_1 = models.FloatField()
+    CRT_2 = models.FloatField()
     #For CRT_3, 1 means profit, 0 break even, -1 loss
     CRT_3 = models.IntegerField()
     CRT_4 = models.IntegerField()
